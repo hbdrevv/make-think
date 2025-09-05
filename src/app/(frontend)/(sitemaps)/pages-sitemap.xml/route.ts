@@ -1,7 +1,12 @@
+// src/app/(frontend)/(sitemaps)/pages-sitemap.xml/route.ts
+import 'server-only'
+
 import { getServerSideSitemap } from 'next-sitemap'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { unstable_cache } from 'next/cache'
+
+export const runtime = 'nodejs'
 
 const getPagesSitemap = unstable_cache(
   async () => {
@@ -18,51 +23,31 @@ const getPagesSitemap = unstable_cache(
       depth: 0,
       limit: 1000,
       pagination: false,
-      where: {
-        _status: {
-          equals: 'published',
-        },
-      },
-      select: {
-        slug: true,
-        updatedAt: true,
-      },
+      where: { _status: { equals: 'published' } },
+      select: { slug: true, updatedAt: true },
     })
 
     const dateFallback = new Date().toISOString()
 
     const defaultSitemap = [
-      {
-        loc: `${SITE_URL}/search`,
-        lastmod: dateFallback,
-      },
-      {
-        loc: `${SITE_URL}/posts`,
-        lastmod: dateFallback,
-      },
+      { loc: `${SITE_URL}/search`, lastmod: dateFallback },
+      { loc: `${SITE_URL}/posts`, lastmod: dateFallback },
     ]
 
-    const sitemap = results.docs
-      ? results.docs
-          .filter((page) => Boolean(page?.slug))
-          .map((page) => {
-            return {
-              loc: page?.slug === 'home' ? `${SITE_URL}/` : `${SITE_URL}/${page?.slug}`,
-              lastmod: page.updatedAt || dateFallback,
-            }
-          })
-      : []
+    const sitemap = (results.docs ?? [])
+      .filter((page: any) => Boolean(page?.slug))
+      .map((page: any) => ({
+        loc: page?.slug === 'home' ? `${SITE_URL}/` : `${SITE_URL}/${page?.slug}`,
+        lastmod: page.updatedAt || dateFallback,
+      }))
 
     return [...defaultSitemap, ...sitemap]
   },
   ['pages-sitemap'],
-  {
-    tags: ['pages-sitemap'],
-  },
+  { tags: ['pages-sitemap'] },
 )
 
 export async function GET() {
   const sitemap = await getPagesSitemap()
-
   return getServerSideSitemap(sitemap)
 }

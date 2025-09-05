@@ -516,7 +516,9 @@ export const home: (args: HomeArgs) => RequiredDataFromCollectionSlug<'pages'> =
       {
         blockName: 'Archive Block',
         blockType: 'archive',
-        categories: [],
+        collection: 'posts', // ⬅️ REQUIRED by the generated type
+        populateBy: 'collection', // ⬅️ already present (keep)
+        categories: [], // (optional) keep what you had
         introContent: {
           root: {
             type: 'root',
@@ -566,8 +568,8 @@ export const home: (args: HomeArgs) => RequiredDataFromCollectionSlug<'pages'> =
             version: 1,
           },
         },
-        populateBy: 'collection',
-        relationTo: 'posts',
+        //populateBy: 'collection',
+        //relationTo: 'posts',
       },
       {
         blockName: 'CTA',

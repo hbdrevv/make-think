@@ -1,3 +1,4 @@
+import type { CardPostData } from '@/components/Card'
 import type { Metadata } from 'next/types'
 
 import { CollectionArchive } from '@/components/CollectionArchive'
@@ -45,7 +46,7 @@ export default async function Page() {
         />
       </div>
 
-      <CollectionArchive posts={posts.docs} />
+      <CollectionArchive docs={posts.docs as CardPostData[]} collection="posts" />
 
       <div className="container">
         {posts.totalPages > 1 && posts.page && (
