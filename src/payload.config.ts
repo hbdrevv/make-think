@@ -11,6 +11,7 @@ import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
 import { Posts } from './collections/Posts'
 import { Users } from './collections/Users'
+import Work from './collections/Work'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
 import { plugins } from './plugins'
@@ -19,6 +20,15 @@ import { getServerSideURL } from './utilities/getURL'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
+
+// TEMP DEBUG
+// If this prints "work", the object is defined and has a slug.
+try {
+  // @ts-ignore - Work is a collection config
+  console.log('DBG Work slug:', Work?.slug)
+} catch (e) {
+  console.error('DBG Work import failed:', e)
+}
 
 export default buildConfig({
   admin: {
@@ -62,7 +72,7 @@ export default buildConfig({
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || '',
   }),
-  collections: [Pages, Posts, Media, Categories, Users],
+  collections: [Pages, Work, Posts, Media, Categories, Users],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer],
   plugins: [

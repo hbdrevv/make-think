@@ -1,54 +1,56 @@
-import type { Post, ArchiveBlock as ArchiveBlockProps } from '@/payload-types'
-
+import React from 'react'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
-import React from 'react'
 import RichText from '@/components/RichText'
-
 import { CollectionArchive } from '@/components/CollectionArchive'
 
-export const ArchiveBlock: React.FC<
-  ArchiveBlockProps & {
-    id?: string
-  }
-> = async (props) => {
-  const { id, categories, introContent, limit: limitFromProps, populateBy, selectedDocs } = props
+// IMPORTANT: import the updated types after typegen
+import type { ArchiveBlock as ArchiveBlockProps, Post, Work } from '@/payload-types'
+
+type Doc = Post | Work
+
+export const ArchiveBlock: React.FC<ArchiveBlockProps & { id?: string }> = async (props) => {
+  const {
+    id,
+    categories, // may be posts-only; we’ll ignore for work
+    introContent,
+    limit: limitFromProps,
+    populateBy,
+    selectedDocs,
+    collection = 'posts', // NEW from schema
+  } = props
 
   const limit = limitFromProps || 3
-
-  let posts: Post[] = []
+  let docs: Doc[] = []
 
   if (populateBy === 'collection') {
     const payload = await getPayload({ config: configPromise })
 
-    const flattenedCategories = categories?.map((category) => {
-      if (typeof category === 'object') return category.id
-      else return category
-    })
-
-    const fetchedPosts = await payload.find({
-      collection: 'posts',
-      depth: 1,
-      limit,
-      ...(flattenedCategories && flattenedCategories.length > 0
+    // Build a where clause only for posts when categories are present
+    const where =
+      collection === 'posts' && categories?.length
         ? {
-            where: {
-              categories: {
-                in: flattenedCategories,
-              },
+            categories: {
+              in: categories.map((c: any) => (typeof c === 'object' ? c.id : c)),
             },
           }
-        : {}),
+        : undefined
+
+    const res = await payload.find({
+      collection, // ← 'posts' or 'work'
+      depth: 1,
+      limit,
+      ...(where ? { where } : {}),
+      sort: '-publishedAt', // both collections have this in your config; if not, swap to '-updatedAt'
     })
 
-    posts = fetchedPosts.docs
+    docs = res.docs as Doc[]
   } else {
+    // selection path
     if (selectedDocs?.length) {
-      const filteredSelectedPosts = selectedDocs.map((post) => {
-        if (typeof post.value === 'object') return post.value
-      }) as Post[]
-
-      posts = filteredSelectedPosts
+      docs = selectedDocs
+        .map((sel) => (typeof sel.value === 'object' ? sel.value : undefined))
+        .filter(Boolean) as Doc[]
     }
   }
 
@@ -59,7 +61,8 @@ export const ArchiveBlock: React.FC<
           <RichText className="ms-0 max-w-[48rem]" data={introContent} enableGutter={false} />
         </div>
       )}
-      <CollectionArchive posts={posts} />
+      {/* Pass the chosen collection so the renderer can link correctly */}
+      <CollectionArchive collection={collection} docs={docs} />
     </div>
   )
 }

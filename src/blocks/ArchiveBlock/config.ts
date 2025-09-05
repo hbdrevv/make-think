@@ -1,94 +1,50 @@
 import type { Block } from 'payload'
 
-import {
-  FixedToolbarFeature,
-  HeadingFeature,
-  InlineToolbarFeature,
-  lexicalEditor,
-} from '@payloadcms/richtext-lexical'
-
 export const Archive: Block = {
   slug: 'archive',
-  interfaceName: 'ArchiveBlock',
+  labels: { singular: 'Archive', plural: 'Archives' },
   fields: [
+    // NEW: which collection to populate from
     {
-      name: 'introContent',
-      type: 'richText',
-      editor: lexicalEditor({
-        features: ({ rootFeatures }) => {
-          return [
-            ...rootFeatures,
-            HeadingFeature({ enabledHeadingSizes: ['h1', 'h2', 'h3', 'h4'] }),
-            FixedToolbarFeature(),
-            InlineToolbarFeature(),
-          ]
-        },
-      }),
-      label: 'Intro Content',
+      name: 'collection',
+      type: 'select',
+      defaultValue: 'posts',
+      required: true,
+      options: [
+        { label: 'Posts', value: 'posts' },
+        { label: 'Work', value: 'work' },
+      ],
     },
+
+    // keep your existing fields
     {
       name: 'populateBy',
-      type: 'select',
+      type: 'radio',
       defaultValue: 'collection',
       options: [
-        {
-          label: 'Collection',
-          value: 'collection',
-        },
-        {
-          label: 'Individual Selection',
-          value: 'selection',
-        },
+        { label: 'From a collection', value: 'collection' },
+        { label: 'Choose specific items', value: 'selection' },
       ],
+      admin: { layout: 'horizontal' },
+      required: true,
     },
-    {
-      name: 'relationTo',
-      type: 'select',
-      admin: {
-        condition: (_, siblingData) => siblingData.populateBy === 'collection',
-      },
-      defaultValue: 'posts',
-      label: 'Collections To Show',
-      options: [
-        {
-          label: 'Posts',
-          value: 'posts',
-        },
-      ],
-    },
-    {
-      name: 'categories',
-      type: 'relationship',
-      admin: {
-        condition: (_, siblingData) => siblingData.populateBy === 'collection',
-      },
-      hasMany: true,
-      label: 'Categories To Show',
-      relationTo: 'categories',
-    },
-    {
-      name: 'limit',
-      type: 'number',
-      admin: {
-        condition: (_, siblingData) => siblingData.populateBy === 'collection',
-        step: 1,
-      },
-      defaultValue: 10,
-      label: 'Limit',
-    },
+
+    // If you had category filters, those apply only to posts. Either hide when collection === 'work'
+    // or just leave them and they’ll be ignored for work. (Optional nicety.)
+
+    // Allow picking items from either collection when populateBy = 'selection'
     {
       name: 'selectedDocs',
       type: 'relationship',
-      admin: {
-        condition: (_, siblingData) => siblingData.populateBy === 'selection',
-      },
+      relationTo: ['posts', 'work'],
       hasMany: true,
-      label: 'Selection',
-      relationTo: ['posts'],
+      admin: {
+        condition: (_, siblingData) => siblingData?.populateBy === 'selection',
+      },
     },
+
+    { name: 'limit', type: 'number', defaultValue: 3, min: 1, max: 50 },
+
+    { name: 'introContent', type: 'richText' },
   ],
-  labels: {
-    plural: 'Archives',
-    singular: 'Archive',
-  },
 }
