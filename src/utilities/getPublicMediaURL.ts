@@ -1,28 +1,31 @@
-export type MinimalMedia =
-  | { url?: string | null; filename?: string | null }
+// src/utilities/getPublicMediaURL.ts
+type MinimalMedia =
   | string
+  | {
+      url?: string | null
+      filename?: string | null
+    }
   | null
   | undefined
+
+const PUBLIC_BASE =
+  (process.env.NEXT_PUBLIC_S3_PUBLIC_URL || '').replace(/\/$/, '') || // e.g. https://pub-xxxx.r2.dev
+  ''
 
 export function getPublicMediaURL(input: MinimalMedia): string | undefined {
   if (!input) return undefined
 
+  // Allow passing a string (filename or full URL)
   if (typeof input === 'string') {
     if (/^https?:\/\//i.test(input)) return input
-    const base = process.env.NEXT_PUBLIC_S3_PUBLIC_URL || process.env.S3_PUBLIC_URL
-    return base ? `${trimSlash(base)}/${encodeURIComponent(input)}` : undefined
+    if (!PUBLIC_BASE) return undefined
+    return `${PUBLIC_BASE}/${input.replace(/^\//, '')}`
   }
 
-  if (input.url && /^https?:\/\//i.test(input.url)) return input.url
-
-  const base = process.env.NEXT_PUBLIC_S3_PUBLIC_URL || process.env.S3_PUBLIC_URL
-  if (base && input.filename) {
-    return `${trimSlash(base)}/${encodeURIComponent(input.filename)}`
-  }
-
-  return undefined
-}
-
-function trimSlash(s: string) {
-  return s.replace(/\/$/, '')
+  // Object form from Payload
+  const raw = input.filename || input.url
+  if (!raw) return undefined
+  if (/^https?:\/\//i.test(raw)) return raw
+  if (!PUBLIC_BASE) return undefined
+  return `${PUBLIC_BASE}/${String(raw).replace(/^\//, '')}`
 }

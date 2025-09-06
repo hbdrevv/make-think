@@ -1,6 +1,7 @@
-// storage-adapter-import-placeholder
+// src/payload.config.ts
+
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
-import { s3Storage } from '@payloadcms/storage-s3' // ✅ S3/R2 storage
+import { s3Storage } from '@payloadcms/storage-s3'
 
 import sharp from 'sharp'
 import path from 'path'
@@ -39,10 +40,10 @@ export default buildConfig({
     },
   },
 
-  // Global editor defaults
+  // Editor defaults
   editor: defaultLexical,
 
-  // Database (Mongo Atlas)
+  // Database (Mongo / Atlas)
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || '',
   }),
@@ -56,26 +57,24 @@ export default buildConfig({
   plugins: [
     ...plugins,
 
-    // ✅ Cloudflare R2 via S3-compatible storage
+    // ✅ S3 / Cloudflare R2 storage for the `media` collection.
+    // No baseUrl / generateFileURL here — your getPublicMediaURL* helpers
+    // will construct public URLs client-side from env vars + filename/prefix.
     s3Storage({
       collections: {
-        // apply storage to your `media` collection
-        media: true,
+        media: true, // apply to `media`
       },
       bucket: process.env.S3_BUCKET || '',
-      // These go straight to AWS SDK v3's S3Client
       config: {
-        endpoint: process.env.S3_ENDPOINT || '', // e.g. https://<ACCOUNT_ID>.r2.cloudflarestorage.com
+        endpoint: process.env.S3_ENDPOINT || undefined, // e.g. https://<ACCOUNT_ID>.r2.cloudflarestorage.com
         region: process.env.S3_REGION || 'auto', // R2 uses 'auto'
         credentials: {
           accessKeyId: process.env.S3_ACCESS_KEY_ID || '',
           secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || process.env.S3_SECRET || '',
         },
-        // Path-style is fine for R2; harmless if ignored
+        // R2 usually works with path-style; keep this if you set it in env
         forcePathStyle: process.env.S3_FORCE_PATH_STYLE === 'true',
       },
-      // If you later want strictly public URLs without signing, you can also
-      // set `signedUrls: false` in this plugin’s options (optional).
     }),
   ],
 
