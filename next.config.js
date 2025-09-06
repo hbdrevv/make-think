@@ -3,34 +3,42 @@
 import { withPayload } from '@payloadcms/next/withPayload'
 import redirects from './redirects.js'
 
-// Prefer Vercel URL, else fall back to explicit/public/local
-const NEXT_PUBLIC_SERVER_URL =
-  (process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : process.env.NEXT_PUBLIC_SERVER_URL) ||
-  process.env.__NEXT_PRIVATE_ORIGIN ||
-  'http://localhost:3000'
+// Prefer explicit/public/local
+const SITE = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
 
-// If using Cloudflare R2, allow that host for <Image>
+// Optional: allow Cloudflare R2 host(s) for <Image>
 const R2_HOST = process.env.S3_ENDPOINT ? new URL(process.env.S3_ENDPOINT).hostname : undefined
+const PUB_HOST = process.env.NEXT_PUBLIC_S3_PUBLIC_URL
+  ? new URL(process.env.NEXT_PUBLIC_S3_PUBLIC_URL).hostname
+  : undefined
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
     remotePatterns: [
-      // your site host
-      ...[NEXT_PUBLIC_SERVER_URL].map((item) => {
-        const url = new URL(item)
-        return { protocol: url.protocol.replace(':', ''), hostname: url.hostname }
-      }),
-      // R2 host (if configured)
+      // your site (allow both http for local and https for prod)
+      ...(() => {
+        try {
+          const u = new URL(SITE)
+          return [
+            { protocol: 'http', hostname: u.hostname },
+            { protocol: 'https', hostname: u.hostname },
+          ]
+        } catch {
+          return []
+        }
+      })(),
+      // R2 endpoint host (e.g. <ACCOUNT_ID>.r2.cloudflarestorage.com)
       ...(R2_HOST ? [{ protocol: 'https', hostname: R2_HOST }] : []),
+      // public CDN/base if you set NEXT_PUBLIC_S3_PUBLIC_URL
+      ...(PUB_HOST ? [{ protocol: 'https', hostname: PUB_HOST }] : []),
     ],
   },
+
   reactStrictMode: true,
   redirects,
 
-  // ⬇️ Ignore optional native Mongo deps so Next doesn’t try to bundle them
+  // Ignore optional native Mongo deps so Next doesn’t try to bundle them
   webpack: (config) => {
     const ignore = [
       'kerberos',
@@ -44,8 +52,13 @@ const nextConfig = {
     config.resolve.alias ??= {}
     for (const mod of ignore) config.resolve.alias[mod] = false
 
-    config.externals = config.externals || []
-    for (const mod of ignore) if (!config.externals.includes(mod)) config.externals.push(mod)
+    const externals = Array.isArray(config.externals)
+      ? config.externals
+      : config.externals
+        ? [config.externals]
+        : []
+    for (const mod of ignore) if (!externals.includes(mod)) externals.push(mod)
+    config.externals = externals
 
     return config
   },
