@@ -1,33 +1,37 @@
 import 'server-only'
+import { notFound } from 'next/navigation'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
-import { RenderBlocks } from '../../../../blocks/RenderBlocks'
+import { RenderBlocks } from '@/blocks/RenderBlocks'
+import { HighImpactHero } from '@/heros/HighImpact'
 
 export const revalidate = 60
 
-export default async function WorkDetail({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params
+type Params = { params: { slug: string } }
 
+export default async function Page({ params: { slug } }: Params) {
   const payload = await getPayload({ config: configPromise })
   const { docs } = await payload.find({
     collection: 'work',
-    where: {
-      and: [{ slug: { equals: slug } }, { _status: { equals: 'published' } }],
-    },
+    where: { slug: { equals: slug } },
     depth: 2,
     limit: 1,
   })
 
   const doc = docs?.[0]
-  if (!doc) return null
+  if (!doc) notFound()
 
-  // Normalize possible block field names (common patterns in Payload projects)
-  const blocks = (doc as any).blocks ?? (doc as any).content ?? (doc as any).layout ?? []
+  const blocks = (doc as any)?.layout ?? (doc as any)?.blocks ?? []
 
   return (
-    <article className="mx-auto max-w-3xl p-6">
-      <h1 className="text-3xl font-semibold mb-4">{(doc as any).title ?? 'Work'}</h1>
-      {Array.isArray(blocks) && blocks.length > 0 ? <RenderBlocks blocks={blocks} /> : null}
-    </article>
+    <div className="pt-24 pb-24">
+      {(doc as any)?.hero?.type === 'highImpact' && <HighImpactHero {...(doc as any).hero} />}
+      <div className="container">
+        {!(doc as any)?.hero?.type === 'highImpact' && (
+          <h1 className="mb-6 text-4xl font-semibold">{(doc as any).title}</h1>
+        )}
+        <RenderBlocks blocks={blocks} />
+      </div>
+    </div>
   )
 }
