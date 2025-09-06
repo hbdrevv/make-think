@@ -6,26 +6,36 @@ const NEXT_PUBLIC_SERVER_URL = process.env.VERCEL_PROJECT_PRODUCTION_URL
   ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
   : process.env.__NEXT_PRIVATE_ORIGIN || 'http://localhost:3000'
 
-// 👇 Pull the R2 host from your endpoint env var
-const R2_HOST = process.env.S3_ENDPOINT
-  ? new URL(process.env.S3_ENDPOINT).hostname // e.g. b4c01891a10109d825734c9958019bf6.r2.cloudflarestorage.com
-  : undefined
+// next.config.js
+const { redirects } = require('./redirects')
+
+// Pull hosts from env (guard against undefined)
+const hosts = []
+
+if (process.env.NEXT_PUBLIC_SERVER_URL) {
+  const u = new URL(process.env.NEXT_PUBLIC_SERVER_URL)
+  hosts.push({ protocol: u.protocol.replace(':', ''), hostname: u.hostname })
+}
+
+if (process.env.S3_ENDPOINT) {
+  const u = new URL(process.env.S3_ENDPOINT) // e.g. https://<ACCOUNT_ID>.r2.cloudflarestorage.com
+  hosts.push({ protocol: u.protocol.replace(':', ''), hostname: u.hostname })
+}
+
+if (process.env.S3_PUBLIC_URL) {
+  const u = new URL(process.env.S3_PUBLIC_URL) // e.g. https://pub-xxxxxxxx.r2.dev/make-think
+  hosts.push({ protocol: u.protocol.replace(':', ''), hostname: u.hostname })
+}
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    remotePatterns: [
-      // your site host
-      ...[NEXT_PUBLIC_SERVER_URL].map((item) => {
-        const url = new URL(item)
-        return { protocol: url.protocol.replace(':', ''), hostname: url.hostname }
-      }),
-      // ✅ allow R2 image host (needed for Next/Image)
-      ...(R2_HOST ? [{ protocol: 'https', hostname: R2_HOST }] : []),
-    ],
+    remotePatterns: hosts,
   },
   reactStrictMode: true,
   redirects,
 }
+
+module.exports = nextConfig
 
 export default withPayload(nextConfig, { devBundleServerPackages: false })
