@@ -14,17 +14,18 @@ import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 import { draftMode } from 'next/headers'
 
 import './globals.css'
-import { getServerSideURL } from '@/utilities/getURL'
+import { getPublicMediaURLFromResource } from '@/utilities/getPublicMediaURLFromResource'
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const { isEnabled } = await draftMode()
+  const logoUrl = getPublicMediaURLFromResource({ filename: 'drevv_logo_rounded_2x.png' })
 
   return (
     <html className={cn(GeistSans.variable, GeistMono.variable)} lang="en" suppressHydrationWarning>
       <head>
         <InitTheme />
-        <link href="/favicon.ico" rel="icon" sizes="32x32" />
-        <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
+        {logoUrl && <link href={logoUrl} rel="icon" sizes="32x32" />}
+        {logoUrl && <link href={logoUrl} rel="icon" type="image/png" />}
       </head>
       <body>
         <Providers>
