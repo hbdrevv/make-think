@@ -53,7 +53,7 @@ export default async function ArchiveBlock(props: ArchiveBlockProps & { id?: str
       depth: 1,
       limit,
       ...(where ? { where } : {}),
-      sort: '-updatedAt', // change to '-publishedAt' if both collections have it
+      sort: '-publishedAt', // change to '-publishedAt' if both collections have it or 'updatedAt'
       overrideAccess: false,
     })
 
