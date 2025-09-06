@@ -63,6 +63,7 @@ export default buildConfig({
       },
       bucket: process.env.S3_BUCKET || '',
       // These go straight to AWS SDK v3's S3Client
+      baseUrl: process.env.S3_PUBLIC_URL!,
       config: {
         endpoint: process.env.S3_ENDPOINT || '', // e.g. https://<ACCOUNT_ID>.r2.cloudflarestorage.com
         region: process.env.S3_REGION || 'auto', // R2 uses 'auto'
