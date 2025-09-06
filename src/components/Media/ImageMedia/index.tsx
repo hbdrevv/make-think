@@ -9,7 +9,7 @@ import React from 'react'
 import type { Props as MediaProps } from '../types'
 
 import { cssVariables } from '@/cssVariables'
-import { getMediaUrl } from '@/utilities/getMediaUrl'
+import { getPublicMediaURLFromResource } from '@/utilities/getPublicMediaURLFromResource'
 
 const { breakpoints } = cssVariables
 
@@ -36,15 +36,25 @@ export const ImageMedia: React.FC<MediaProps> = (props) => {
   let src: StaticImageData | string = srcFromProps || ''
 
   if (!src && resource && typeof resource === 'object') {
-    const { alt: altFromResource, height: fullHeight, url, width: fullWidth } = resource
+    const {
+      alt: altFromResource,
+      height: fullHeight,
+      width: fullWidth,
+    } = resource as {
+      alt?: string
+      height?: number
+      width?: number
+    }
 
-    width = fullWidth!
-    height = fullHeight!
+    width = fullWidth
+    height = fullHeight
     alt = altFromResource || ''
 
-    const cacheTag = resource.updatedAt
-
-    src = getMediaUrl(url, cacheTag)
+    const candidate = getPublicMediaURLFromResource(resource as any, {
+      cacheBust: true,
+    })
+    if (!candidate) return null
+    src = candidate
   }
 
   const loading = loadingFromProps || (!priority ? 'lazy' : undefined)

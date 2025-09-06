@@ -1,5 +1,6 @@
 import clsx from 'clsx'
 import React from 'react'
+import { getPublicMediaURLFromResource } from '@/utilities/getPublicMediaURLFromResource'
 
 interface Props {
   className?: string
@@ -23,7 +24,7 @@ export const Logo = (props: Props) => {
       fetchPriority={priority}
       decoding="async"
       className={clsx('max-w-[9.375rem] w-full h-[34px]', className)}
-      src="/api/media/file/drevv_logo_rounded_2x.png"
+      src={getPublicMediaURLFromResource({ filename: 'drevv_logo_rounded_2x.png' })}
     />
   )
 }

@@ -1,6 +1,6 @@
 // storage-adapter-import-placeholder
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
-import { s3Storage } from '@payloadcms/storage-s3' // ✅ correct import
+import { s3Storage } from '@payloadcms/storage-s3' // ✅ S3/R2 storage
 
 import sharp from 'sharp'
 import path from 'path'
@@ -42,7 +42,7 @@ export default buildConfig({
   // Global editor defaults
   editor: defaultLexical,
 
-  // Database (Mongo)
+  // Database (Mongo Atlas)
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || '',
   }),
@@ -56,14 +56,14 @@ export default buildConfig({
   plugins: [
     ...plugins,
 
-    // ✅ S3 / Cloudflare R2 storage for the `media` collection
+    // ✅ Cloudflare R2 via S3-compatible storage
     s3Storage({
       collections: {
-        media: true, // apply to your `media` collection
+        // apply storage to your `media` collection
+        media: true,
       },
       bucket: process.env.S3_BUCKET || '',
       // These go straight to AWS SDK v3's S3Client
-      baseUrl: process.env.S3_PUBLIC_URL!,
       config: {
         endpoint: process.env.S3_ENDPOINT || '', // e.g. https://<ACCOUNT_ID>.r2.cloudflarestorage.com
         region: process.env.S3_REGION || 'auto', // R2 uses 'auto'
@@ -71,11 +71,11 @@ export default buildConfig({
           accessKeyId: process.env.S3_ACCESS_KEY_ID || '',
           secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || process.env.S3_SECRET || '',
         },
-        // For R2 you can keep this on; it won't hurt if the SDK ignores it
+        // Path-style is fine for R2; harmless if ignored
         forcePathStyle: process.env.S3_FORCE_PATH_STYLE === 'true',
       },
-      // Optional: if you want to ensure public URLs without signing:
-      // signedUrls: false,
+      // If you later want strictly public URLs without signing, you can also
+      // set `signedUrls: false` in this plugin’s options (optional).
     }),
   ],
 

@@ -1,37 +1,48 @@
 import 'server-only'
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
-import { RenderBlocks } from '@/blocks/RenderBlocks'
+import { RenderBlocks } from '../../../../blocks/RenderBlocks'
 import { HighImpactHero } from '@/heros/HighImpact'
 
-export const revalidate = 60
+type Args = {
+  params: Promise<{ slug: string }>
+}
 
-type Params = { params: { slug: string } }
+export default async function Page({ params }: Args) {
+  const { slug } = await params
 
-export default async function Page({ params: { slug } }: Params) {
   const payload = await getPayload({ config: configPromise })
-  const { docs } = await payload.find({
+  const res = await payload.find({
     collection: 'work',
     where: { slug: { equals: slug } },
-    depth: 2,
     limit: 1,
+    depth: 2,
+    overrideAccess: false,
   })
 
-  const doc = docs?.[0]
+  const doc = res.docs?.[0] as any
   if (!doc) notFound()
 
-  const blocks = (doc as any)?.layout ?? (doc as any)?.blocks ?? []
-
   return (
-    <div className="pt-24 pb-24">
-      {(doc as any)?.hero?.type === 'highImpact' && <HighImpactHero {...(doc as any).hero} />}
-      <div className="container">
-        {!(doc as any)?.hero?.type === 'highImpact' && (
-          <h1 className="mb-6 text-4xl font-semibold">{(doc as any).title}</h1>
+    <>
+      {doc.hero?.type === 'highImpact' && <HighImpactHero {...doc.hero} />}
+      <article className="mx-auto max-w-6xl p-6">
+        {doc.hero?.type !== 'highImpact' && (
+          <h1 className="text-3xl font-semibold mb-4">{doc.title ?? 'Work'}</h1>
         )}
-        <RenderBlocks blocks={blocks} />
-      </div>
-    </div>
+        {Array.isArray(doc.layout) ? <RenderBlocks blocks={doc.layout} /> : null}
+      </article>
+    </>
   )
+}
+
+export async function generateMetadata({ params }: Args): Promise<Metadata> {
+  const { slug } = await params
+  return { title: docTitle(slug) }
+}
+
+function docTitle(slug: string) {
+  return `Work — ${slug}`
 }
