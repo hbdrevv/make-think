@@ -13,7 +13,6 @@ export default async function WorkIndexPage() {
   // Check if user is authenticated via payload-token cookie
   const { user } = await payload.auth({ headers })
   const isAuthenticated = !!user
-  console.log('[Work Page] isAuthenticated:', isAuthenticated, 'user:', user?.email)
 
   const { docs } = await payload.find({
     collection: 'work',
