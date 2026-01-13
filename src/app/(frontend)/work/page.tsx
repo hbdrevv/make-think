@@ -1,18 +1,39 @@
 import 'server-only'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
+import { headers as getHeaders } from 'next/headers'
 import Link from 'next/link'
 
-export const revalidate = 60
+export const dynamic = 'force-dynamic'
 
 export default async function WorkIndexPage() {
   const payload = await getPayload({ config: configPromise })
+  const headers = await getHeaders()
+
+  // Check if user is authenticated via payload-token cookie
+  const { user } = await payload.auth({ headers })
+  const isAuthenticated = !!user
+  console.log('[Work Page] isAuthenticated:', isAuthenticated, 'user:', user?.email)
+
   const { docs } = await payload.find({
     collection: 'work',
-    where: { _status: { equals: 'published' } },
     depth: 1,
     limit: 50,
     sort: '-createdAt',
+    overrideAccess: isAuthenticated,
+    where: isAuthenticated
+      ? { _status: { equals: 'published' } }
+      : {
+          and: [
+            { _status: { equals: 'published' } },
+            {
+              or: [
+                { visibility: { equals: 'public' } },
+                { visibility: { exists: false } },
+              ],
+            },
+          ],
+        },
   })
 
   return (

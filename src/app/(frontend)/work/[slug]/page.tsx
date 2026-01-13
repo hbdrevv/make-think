@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
+import { headers as getHeaders } from 'next/headers'
 import { RenderBlocks } from '../../../../blocks/RenderBlocks'
 import { HighImpactHero } from '@/heros/HighImpact'
 
@@ -14,16 +15,26 @@ export default async function Page({ params }: Args) {
   const { slug } = await params
 
   const payload = await getPayload({ config: configPromise })
+  const headers = await getHeaders()
+
+  // Check if user is authenticated via payload-token cookie
+  const { user } = await payload.auth({ headers })
+  const isAuthenticated = !!user
+
   const res = await payload.find({
     collection: 'work',
     where: { slug: { equals: slug } },
     limit: 1,
     depth: 2,
-    overrideAccess: false,
+    overrideAccess: isAuthenticated,
   })
 
   const doc = res.docs?.[0] as any
-  if (!doc) notFound()
+
+  // If not authenticated and doc is protected, treat as not found
+  if (!doc || (!isAuthenticated && doc.visibility === 'protected')) {
+    notFound()
+  }
 
   return (
     <>

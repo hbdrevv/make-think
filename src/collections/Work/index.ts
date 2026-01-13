@@ -1,7 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
 import { authenticated } from '../../access/authenticated'
-import { authenticatedOrPublished } from '../../access/authenticatedOrPublished'
+import { authenticatedOrPublicWork } from '../../access/authenticatedOrPublicWork'
 
 import { Archive } from '../../blocks/ArchiveBlock/config'
 import { CallToAction } from '../../blocks/CallToAction/config'
@@ -25,13 +25,13 @@ const Work: CollectionConfig<'work'> = {
   access: {
     create: authenticated,
     delete: authenticated,
-    read: authenticatedOrPublished,
+    read: authenticatedOrPublicWork,
     update: authenticated,
   },
   defaultPopulate: { title: true, slug: true },
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'slug', 'updatedAt'],
+    defaultColumns: ['title', 'slug', 'visibility', 'updatedAt'],
     livePreview: {
       url: ({ data, req }) => {
         const slug = typeof data?.slug === 'string' ? data.slug : ''
@@ -85,6 +85,19 @@ const Work: CollectionConfig<'work'> = {
           ],
         },
       ],
+    },
+{
+      name: 'visibility',
+      type: 'select',
+      defaultValue: 'public',
+      options: [
+        { label: 'Public', value: 'public' },
+        { label: 'Protected (Login Required)', value: 'protected' },
+      ],
+      admin: {
+        position: 'sidebar',
+        description: 'Protected items require users to log in to view',
+      },
     },
     { name: 'publishedAt', type: 'date', admin: { position: 'sidebar' } },
     ...slugField(),

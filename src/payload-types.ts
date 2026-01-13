@@ -534,6 +534,10 @@ export interface Work {
     image?: (string | null) | Media;
     description?: string | null;
   };
+  /**
+   * Protected items require users to log in to view
+   */
+  visibility?: ('public' | 'protected') | null;
   publishedAt?: string | null;
   slug?: string | null;
   slugLock?: boolean | null;
@@ -1301,6 +1305,7 @@ export interface WorkSelect<T extends boolean = true> {
         image?: T;
         description?: T;
       };
+  visibility?: T;
   publishedAt?: T;
   slug?: T;
   slugLock?: T;
