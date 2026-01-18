@@ -1,0 +1,116 @@
+{
+  "color": {
+    "semantic": {
+      "$description": "Semantic colors for light theme - use these in components",
+      "background": {
+        "$value": "{color.primitive.white}",
+        "$type": "color",
+        "$description": "Default page background"
+      },
+      "foreground": {
+        "$value": "{color.primitive.gray.900}",
+        "$type": "color",
+        "$description": "Default text color"
+      },
+      "card": {
+        "DEFAULT": {
+          "$value": "{color.primitive.gray.100}",
+          "$type": "color",
+          "$description": "Card background"
+        },
+        "foreground": {
+          "$value": "{color.primitive.gray.900}",
+          "$type": "color"
+        }
+      },
+      "popover": {
+        "DEFAULT": {
+          "$value": "{color.primitive.white}",
+          "$type": "color"
+        },
+        "foreground": {
+          "$value": "{color.primitive.gray.900}",
+          "$type": "color"
+        }
+      },
+      "primary": {
+        "DEFAULT": {
+          "$value": "{color.primitive.gray.900}",
+          "$type": "color",
+          "$description": "Primary actions and emphasis"
+        },
+        "foreground": {
+          "$value": "{color.primitive.gray.50}",
+          "$type": "color"
+        }
+      },
+      "secondary": {
+        "DEFAULT": {
+          "$value": "{color.primitive.gray.100}",
+          "$type": "color"
+        },
+        "foreground": {
+          "$value": "{color.primitive.gray.900}",
+          "$type": "color"
+        }
+      },
+      "muted": {
+        "DEFAULT": {
+          "$value": "{color.primitive.gray.100}",
+          "$type": "color",
+          "$description": "Subdued backgrounds"
+        },
+        "foreground": {
+          "$value": "{color.primitive.gray.500}",
+          "$type": "color",
+          "$description": "Subdued text"
+        }
+      },
+      "accent": {
+        "DEFAULT": {
+          "$value": "{color.primitive.gray.100}",
+          "$type": "color"
+        },
+        "foreground": {
+          "$value": "{color.primitive.gray.900}",
+          "$type": "color"
+        }
+      },
+      "destructive": {
+        "DEFAULT": {
+          "$value": "{color.primitive.red.500}",
+          "$type": "color"
+        },
+        "foreground": {
+          "$value": "{color.primitive.gray.50}",
+          "$type": "color"
+        }
+      },
+      "border": {
+        "$value": "{color.primitive.gray.200}",
+        "$type": "color"
+      },
+      "input": {
+        "$value": "{color.primitive.gray.200}",
+        "$type": "color"
+      },
+      "ring": {
+        "$value": "{color.primitive.gray.900}",
+        "$type": "color",
+        "$description": "Focus ring color"
+      },
+      "success": {
+        "$value": "{color.primitive.cyan.200}",
+        "$type": "color"
+      },
+      "warning": {
+        "$value": "{color.primitive.amber.100}",
+        "$type": "color"
+      },
+      "error": {
+        "$value": "{color.primitive.red.100}",
+        "$type": "color"
+      }
+    }
+  }
+}
