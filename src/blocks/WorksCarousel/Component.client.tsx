@@ -4,7 +4,6 @@ import React, { useRef, useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { cn } from '@/utilities/ui'
 import { Media } from '@/components/Media'
-import { useDragScroll } from '@/blocks/shared/useDragScroll'
 import type { Work, Media as MediaType } from '@/payload-types'
 
 type Props = {
@@ -33,30 +32,45 @@ export const WorksCarouselClient: React.FC<Props> = (props) => {
 
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const [scrollProgress, setScrollProgress] = useState(0)
+  const [canScrollLeft, setCanScrollLeft] = useState(false)
+  const [canScrollRight, setCanScrollRight] = useState(true)
 
-  const { handleMouseDown, handleMouseMove, handleMouseUp, handleMouseLeave } = useDragScroll(scrollContainerRef)
-
-  const handleScroll = useCallback(() => {
+  const updateScrollState = useCallback(() => {
     const container = scrollContainerRef.current
     if (!container) return
 
     const scrollLeft = container.scrollLeft
-    // Adjust maxScroll so progress completes when last image is fully visible
     const maxScroll = container.scrollWidth - container.clientWidth
     const adjustedMax = maxScroll - container.clientWidth * 0.6
     const progress = adjustedMax > 0 ? scrollLeft / adjustedMax : 0
 
     setScrollProgress(Math.min(1, Math.max(0, progress)))
+    setCanScrollLeft(scrollLeft > 10)
+    setCanScrollRight(scrollLeft < maxScroll - 10)
   }, [])
 
   useEffect(() => {
     const container = scrollContainerRef.current
     if (!container) return
 
-    container.addEventListener('scroll', handleScroll, { passive: true })
-    handleScroll() // Initialize progress
-    return () => container.removeEventListener('scroll', handleScroll)
-  }, [handleScroll])
+    container.addEventListener('scroll', updateScrollState, { passive: true })
+    updateScrollState()
+    return () => container.removeEventListener('scroll', updateScrollState)
+  }, [updateScrollState])
+
+  const scrollToDirection = useCallback((direction: 'left' | 'right') => {
+    const container = scrollContainerRef.current
+    if (!container) return
+
+    // Calculate item width based on container height
+    const containerHeight = container.querySelector('[data-carousel-item]')?.clientHeight || 400
+    const itemWidth = containerHeight * ASPECT_RATIO + 16 // + gap
+
+    container.scrollBy({
+      left: direction === 'right' ? itemWidth : -itemWidth,
+      behavior: 'smooth',
+    })
+  }, [])
 
   if (!works || works.length === 0) return null
 
@@ -64,11 +78,9 @@ export const WorksCarouselClient: React.FC<Props> = (props) => {
 
   // Helper to get cover image from work
   const getCoverImage = (work: Work): MediaType | null => {
-    // Try hero.media first
     if (work.hero?.media && typeof work.hero.media === 'object') {
       return work.hero.media as MediaType
     }
-    // Fallback to meta.image
     if (work.meta?.image && typeof work.meta.image === 'object') {
       return work.meta.image as MediaType
     }
@@ -83,28 +95,67 @@ export const WorksCarouselClient: React.FC<Props> = (props) => {
         marginLeft: 'calc(-50vw + 50%)',
       }}
     >
-      {title && (
-        <h3
-          className="text-lg font-medium mb-4"
-          style={{ paddingLeft: `calc(${GUTTER} + ${PEEK_OFFSET})` }}
-        >
-          {title}
-        </h3>
-      )}
+      {/* Header with title and arrows */}
+      <div
+        className="flex items-center justify-between mb-4"
+        style={{
+          paddingLeft: `calc(${GUTTER} + ${PEEK_OFFSET})`,
+          paddingRight: GUTTER,
+        }}
+      >
+        {title ? (
+          <h3 className="text-lg font-medium">{title}</h3>
+        ) : (
+          <div />
+        )}
 
-      {/* Carousel container - full bleed, no snap */}
+        {/* Arrow controls */}
+        {works.length > 1 && (
+          <div className="flex gap-2">
+            <button
+              onClick={() => scrollToDirection('left')}
+              disabled={!canScrollLeft}
+              className={cn(
+                'w-10 h-10 rounded-full border flex items-center justify-center transition-all',
+                canScrollLeft
+                  ? 'border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer'
+                  : 'border-gray-200 dark:border-gray-700 text-gray-300 dark:text-gray-600 cursor-not-allowed'
+              )}
+              aria-label="Previous slide"
+            >
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M12 5L7 10L12 15" />
+              </svg>
+            </button>
+            <button
+              onClick={() => scrollToDirection('right')}
+              disabled={!canScrollRight}
+              className={cn(
+                'w-10 h-10 rounded-full border flex items-center justify-center transition-all',
+                canScrollRight
+                  ? 'border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer'
+                  : 'border-gray-200 dark:border-gray-700 text-gray-300 dark:text-gray-600 cursor-not-allowed'
+              )}
+              aria-label="Next slide"
+            >
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M8 5L13 10L8 15" />
+              </svg>
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Carousel container */}
       <div
         ref={scrollContainerRef}
-        className="flex gap-4 overflow-x-auto select-none"
+        className="flex gap-4 overflow-x-auto"
         style={{
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',
           paddingRight: `calc(100vw - ${GUTTER} - 100px)`,
+          scrollSnapType: 'x mandatory',
         }}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseLeave}
       >
         {works.map((work, index) => {
           const coverImage = getCoverImage(work)
@@ -113,22 +164,25 @@ export const WorksCarouselClient: React.FC<Props> = (props) => {
           return (
             <div
               key={work.id}
+              data-carousel-item
               className="flex-shrink-0 flex flex-col"
               style={{
                 width: `calc(${containerHeight} * ${ASPECT_RATIO})`,
                 marginLeft: isFirst ? `calc(${GUTTER} + ${PEEK_OFFSET})` : undefined,
+                scrollSnapAlign: 'start',
               }}
             >
-              {/* Image as drag target only - no link */}
-              <div
-                className="relative w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800"
+              {/* Clickable image */}
+              <Link
+                href={`/work/${work.slug}`}
+                className="relative w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800 block group"
                 style={{ height: containerHeight }}
               >
                 {coverImage && (
                   <Media
                     resource={coverImage}
                     fill
-                    imgClassName="object-cover"
+                    imgClassName="object-cover transition-transform duration-300 group-hover:scale-105"
                     videoClassName="absolute inset-0 w-full h-full object-cover"
                   />
                 )}
@@ -137,7 +191,7 @@ export const WorksCarouselClient: React.FC<Props> = (props) => {
                     No image
                   </div>
                 )}
-              </div>
+              </Link>
               <div className="mt-3 flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
                   <Link
