@@ -13,10 +13,11 @@ type Props = {
   className?: string
 }
 
+// Responsive height scales - smaller on mobile
 const heightScale: Record<string, string> = {
-  sm: 'clamp(240px, 30vw, 320px)',
-  md: 'clamp(320px, 40vw, 480px)',
-  lg: 'clamp(400px, 50vw, 640px)',
+  sm: 'clamp(180px, 25vw, 320px)',
+  md: 'clamp(220px, 35vw, 480px)',
+  lg: 'clamp(280px, 45vw, 640px)',
 }
 
 // Fixed 16:9 aspect ratio for works
@@ -24,8 +25,7 @@ const ASPECT_RATIO = 16 / 9
 
 // Simple gutter from viewport edge
 const GUTTER = '1rem'
-// Space to show hint of previous image
-const PEEK_OFFSET = '64px'
+// Peek offset is set via CSS custom property --peek (64px desktop, 32px mobile)
 
 export const WorksCarouselClient: React.FC<Props> = (props) => {
   const { title, height = 'md', works, className } = props
@@ -89,17 +89,31 @@ export const WorksCarouselClient: React.FC<Props> = (props) => {
 
   return (
     <div
-      className={cn('relative', className)}
+      className={cn('relative works-carousel-container', className)}
       style={{
+        ['--peek' as string]: '64px',
         width: '100vw',
         marginLeft: 'calc(-50vw + 50%)',
       }}
     >
+      {/* Responsive CSS for peek offset */}
+      <style>{`
+        @media (max-width: 768px) {
+          .works-carousel-container {
+            --peek: 32px !important;
+          }
+        }
+        @media (min-width: 769px) {
+          .works-carousel-container {
+            --peek: 64px !important;
+          }
+        }
+      `}</style>
       {/* Header with title and arrows */}
       <div
         className="flex items-center justify-between mb-4"
         style={{
-          paddingLeft: `calc(${GUTTER} + ${PEEK_OFFSET})`,
+          paddingLeft: `calc(${GUTTER} + var(--peek))`,
           paddingRight: GUTTER,
         }}
       >
@@ -153,10 +167,10 @@ export const WorksCarouselClient: React.FC<Props> = (props) => {
         style={{
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',
-          paddingLeft: `calc(${GUTTER} + ${PEEK_OFFSET})`,
+          paddingLeft: `calc(${GUTTER} + var(--peek))`,
           paddingRight: `calc(100vw - ${GUTTER} - 100px)`,
           scrollSnapType: 'x mandatory',
-          scrollPaddingLeft: `calc(${GUTTER} + ${PEEK_OFFSET})`,
+          scrollPaddingLeft: `calc(${GUTTER} + var(--peek))`,
         }}
       >
         {works.map((work) => {
@@ -222,7 +236,7 @@ export const WorksCarouselClient: React.FC<Props> = (props) => {
       {works.length > 1 && (
         <div
           className="mt-4"
-          style={{ paddingLeft: `calc(${GUTTER} + ${PEEK_OFFSET})`, paddingRight: GUTTER }}
+          style={{ paddingLeft: `calc(${GUTTER} + var(--peek))`, paddingRight: GUTTER }}
         >
           <div className="h-0.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
             <div
