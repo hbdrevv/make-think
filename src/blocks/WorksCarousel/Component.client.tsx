@@ -153,13 +153,14 @@ export const WorksCarouselClient: React.FC<Props> = (props) => {
         style={{
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',
+          paddingLeft: `calc(${GUTTER} + ${PEEK_OFFSET})`,
           paddingRight: `calc(100vw - ${GUTTER} - 100px)`,
           scrollSnapType: 'x mandatory',
+          scrollPaddingLeft: `calc(${GUTTER} + ${PEEK_OFFSET})`,
         }}
       >
-        {works.map((work, index) => {
+        {works.map((work) => {
           const coverImage = getCoverImage(work)
-          const isFirst = index === 0
 
           return (
             <div
@@ -168,7 +169,6 @@ export const WorksCarouselClient: React.FC<Props> = (props) => {
               className="flex-shrink-0 flex flex-col"
               style={{
                 width: `calc(${containerHeight} * ${ASPECT_RATIO})`,
-                marginLeft: isFirst ? `calc(${GUTTER} + ${PEEK_OFFSET})` : undefined,
                 scrollSnapAlign: 'start',
               }}
             >
