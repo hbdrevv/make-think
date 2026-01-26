@@ -30,7 +30,17 @@ const Work: CollectionConfig<'work'> = {
     read: authenticatedOrPublicWork,
     update: authenticated,
   },
-  defaultPopulate: { title: true, slug: true },
+  defaultPopulate: {
+    title: true,
+    slug: true,
+    hero: {
+      media: true,
+    },
+    meta: {
+      image: true,
+      description: true,
+    },
+  },
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'slug', 'visibility', 'updatedAt'],
