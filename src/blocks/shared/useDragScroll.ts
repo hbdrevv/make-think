@@ -1,6 +1,10 @@
 import { useRef, useCallback, useEffect } from 'react'
 
+// Minimum movement before drag activates (prevents accidental drags on click)
+const DRAG_THRESHOLD = 5
+
 export function useDragScroll(scrollContainerRef: React.RefObject<HTMLDivElement | null>) {
+  const isMouseDown = useRef(false)
   const isDragging = useRef(false)
   const startX = useRef(0)
   const scrollLeft = useRef(0)
@@ -13,35 +17,44 @@ export function useDragScroll(scrollContainerRef: React.RefObject<HTMLDivElement
     const container = scrollContainerRef.current
     if (!container) return
 
+    // Prevent native image dragging
+    e.preventDefault()
+
     // Cancel any ongoing momentum
     if (animationFrame.current) {
       cancelAnimationFrame(animationFrame.current)
       animationFrame.current = null
     }
 
-    isDragging.current = true
+    isMouseDown.current = true
+    isDragging.current = false // Don't start dragging until threshold met
     startX.current = e.pageX - container.offsetLeft
     scrollLeft.current = container.scrollLeft
     lastX.current = e.pageX
     lastTime.current = Date.now()
     velocity.current = 0
-
-    container.style.cursor = 'grabbing'
-    container.style.userSelect = 'none'
   }, [scrollContainerRef])
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    if (!isDragging.current) return
+    if (!isMouseDown.current) return
     const container = scrollContainerRef.current
     if (!container) return
+
+    const x = e.pageX - container.offsetLeft
+    const walk = x - startX.current
+
+    // Only start dragging after threshold is met
+    if (!isDragging.current) {
+      if (Math.abs(walk) < DRAG_THRESHOLD) return
+      isDragging.current = true
+      container.style.cursor = 'grabbing'
+      container.style.userSelect = 'none'
+    }
 
     e.preventDefault()
 
     const now = Date.now()
     const dt = now - lastTime.current
-
-    const x = e.pageX - container.offsetLeft
-    const walk = x - startX.current
 
     // Track velocity for momentum
     if (dt > 0) {
@@ -78,14 +91,16 @@ export function useDragScroll(scrollContainerRef: React.RefObject<HTMLDivElement
 
   const handleMouseUp = useCallback(() => {
     const container = scrollContainerRef.current
-    if (!container || !isDragging.current) return
+    if (!container || !isMouseDown.current) return
 
+    const wasDragging = isDragging.current
+    isMouseDown.current = false
     isDragging.current = false
     container.style.cursor = 'grab'
     container.style.removeProperty('user-select')
 
-    // Apply momentum if there's velocity
-    if (Math.abs(velocity.current) > 0.1) {
+    // Apply momentum if there's velocity and we were actually dragging
+    if (wasDragging && Math.abs(velocity.current) > 0.1) {
       applyMomentum()
     }
   }, [scrollContainerRef, applyMomentum])
