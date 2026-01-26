@@ -23,9 +23,8 @@ const heightScale: Record<string, string> = {
 // Fixed 16:9 aspect ratio for works
 const ASPECT_RATIO = 16 / 9
 
-// Simple gutter from viewport edge
-const GUTTER = '1rem'
-// Peek offset is set via CSS custom property --peek (64px desktop, 32px mobile)
+// Gutter matches Tailwind container padding via CSS custom property
+// Mobile/sm: 1rem, md+: 2rem
 
 export const WorksCarouselClient: React.FC<Props> = (props) => {
   const { title, height = 'md', works, className } = props
@@ -91,21 +90,19 @@ export const WorksCarouselClient: React.FC<Props> = (props) => {
     <div
       className={cn('relative works-carousel-container', className)}
       style={{
-        ['--peek' as string]: '64px',
+        ['--gutter' as string]: '1rem',
         width: '100vw',
         marginLeft: 'calc(-50vw + 50%)',
       }}
     >
-      {/* Responsive CSS for peek offset */}
+      {/* Responsive CSS to match container padding */}
       <style>{`
-        @media (max-width: 768px) {
-          .works-carousel-container {
-            --peek: 32px !important;
-          }
+        .works-carousel-container {
+          --gutter: 1rem;
         }
-        @media (min-width: 769px) {
+        @media (min-width: 768px) {
           .works-carousel-container {
-            --peek: 64px !important;
+            --gutter: 2rem;
           }
         }
       `}</style>
@@ -113,8 +110,8 @@ export const WorksCarouselClient: React.FC<Props> = (props) => {
       <div
         className="flex items-center justify-between mb-4"
         style={{
-          paddingLeft: `calc(${GUTTER} + var(--peek))`,
-          paddingRight: GUTTER,
+          paddingLeft: 'var(--gutter)',
+          paddingRight: 'var(--gutter)',
         }}
       >
         {title ? (
@@ -167,10 +164,10 @@ export const WorksCarouselClient: React.FC<Props> = (props) => {
         style={{
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',
-          paddingLeft: `calc(${GUTTER} + var(--peek))`,
-          paddingRight: `calc(100vw - ${GUTTER} - 100px)`,
+          paddingLeft: 'var(--gutter)',
+          paddingRight: 'calc(100vw - var(--gutter) - 100px)',
           scrollSnapType: 'x mandatory',
-          scrollPaddingLeft: `calc(${GUTTER} + var(--peek))`,
+          scrollPaddingLeft: 'var(--gutter)',
         }}
       >
         {works.map((work) => {
@@ -236,7 +233,7 @@ export const WorksCarouselClient: React.FC<Props> = (props) => {
       {works.length > 1 && (
         <div
           className="mt-4"
-          style={{ paddingLeft: `calc(${GUTTER} + var(--peek))`, paddingRight: GUTTER }}
+          style={{ paddingLeft: 'var(--gutter)', paddingRight: 'var(--gutter)' }}
         >
           <div className="h-0.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
             <div
