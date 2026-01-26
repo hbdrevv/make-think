@@ -1,0 +1,109 @@
+{
+  "color": {
+    "semantic": {
+      "$description": "Semantic colors for dark theme - overrides light theme",
+      "background": {
+        "$value": "{color.primitive.black}",
+        "$type": "color"
+      },
+      "foreground": {
+        "$value": "{color.primitive.gray.50}",
+        "$type": "color"
+      },
+      "card": {
+        "DEFAULT": {
+          "$value": "{color.primitive.gray.950}",
+          "$type": "color"
+        },
+        "foreground": {
+          "$value": "{color.primitive.gray.50}",
+          "$type": "color"
+        }
+      },
+      "popover": {
+        "DEFAULT": {
+          "$value": "{color.primitive.gray.900}",
+          "$type": "color"
+        },
+        "foreground": {
+          "$value": "{color.primitive.gray.50}",
+          "$type": "color"
+        }
+      },
+      "primary": {
+        "DEFAULT": {
+          "$value": "{color.primitive.gray.50}",
+          "$type": "color"
+        },
+        "foreground": {
+          "$value": "{color.primitive.gray.900}",
+          "$type": "color"
+        }
+      },
+      "secondary": {
+        "DEFAULT": {
+          "$value": "{color.primitive.gray.800}",
+          "$type": "color"
+        },
+        "foreground": {
+          "$value": "{color.primitive.gray.50}",
+          "$type": "color"
+        }
+      },
+      "muted": {
+        "DEFAULT": {
+          "$value": "{color.primitive.gray.800}",
+          "$type": "color"
+        },
+        "foreground": {
+          "$value": "{color.primitive.gray.400}",
+          "$type": "color"
+        }
+      },
+      "accent": {
+        "DEFAULT": {
+          "$value": "{color.primitive.gray.800}",
+          "$type": "color"
+        },
+        "foreground": {
+          "$value": "{color.primitive.gray.50}",
+          "$type": "color"
+        }
+      },
+      "destructive": {
+        "DEFAULT": {
+          "$value": "{color.primitive.red.900}",
+          "$type": "color"
+        },
+        "foreground": {
+          "$value": "{color.primitive.gray.50}",
+          "$type": "color"
+        }
+      },
+      "border": {
+        "$value": "{color.primitive.gray.800}",
+        "$type": "color"
+      },
+      "input": {
+        "$value": "{color.primitive.gray.800}",
+        "$type": "color"
+      },
+      "ring": {
+        "$value": "{color.primitive.gray.300}",
+        "$type": "color"
+      },
+      "success": {
+        "$value": "{color.primitive.cyan.800}",
+        "$type": "color"
+      },
+      "warning": {
+        "$value": "{color.primitive.amber.900}",
+        "$type": "color"
+      },
+      "error": {
+        "$value": "{color.primitive.red.900}",
+        "$type": "color"
+      }
+    }
+  }
+}

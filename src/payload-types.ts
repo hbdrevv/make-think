@@ -201,6 +201,8 @@ export interface Page {
     | CallToActionBlock
     | ContentBlock
     | MediaBlock
+    | MediaCarouselBlock
+    | WorksCarouselBlock
     | {
         collection: 'posts' | 'work';
         populateBy: 'collection' | 'selection';
@@ -489,6 +491,8 @@ export interface Work {
     | CallToActionBlock
     | ContentBlock
     | MediaBlock
+    | MediaCarouselBlock
+    | WorksCarouselBlock
     | {
         collection: 'posts' | 'work';
         populateBy: 'collection' | 'selection';
@@ -660,6 +664,38 @@ export interface MediaBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'mediaBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "MediaCarouselBlock".
+ */
+export interface MediaCarouselBlock {
+  title?: string | null;
+  height: 'sm' | 'md' | 'lg';
+  images: {
+    image: string | Media;
+    aspectRatio: '3:4' | '16:9' | '9:16';
+    caption?: string | null;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'mediaCarousel';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "WorksCarouselBlock".
+ */
+export interface WorksCarouselBlock {
+  title?: string | null;
+  height: 'sm' | 'md' | 'lg';
+  /**
+   * Select 3-10 works to display in the carousel
+   */
+  works: (string | Work)[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'worksCarousel';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1154,6 +1190,8 @@ export interface PagesSelect<T extends boolean = true> {
         cta?: T | CallToActionBlockSelect<T>;
         content?: T | ContentBlockSelect<T>;
         mediaBlock?: T | MediaBlockSelect<T>;
+        mediaCarousel?: T | MediaCarouselBlockSelect<T>;
+        worksCarousel?: T | WorksCarouselBlockSelect<T>;
         archive?:
           | T
           | {
@@ -1242,6 +1280,35 @@ export interface MediaBlockSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "MediaCarouselBlock_select".
+ */
+export interface MediaCarouselBlockSelect<T extends boolean = true> {
+  title?: T;
+  height?: T;
+  images?:
+    | T
+    | {
+        image?: T;
+        aspectRatio?: T;
+        caption?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "WorksCarouselBlock_select".
+ */
+export interface WorksCarouselBlockSelect<T extends boolean = true> {
+  title?: T;
+  height?: T;
+  works?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "FormBlock_select".
  */
 export interface FormBlockSelect<T extends boolean = true> {
@@ -1285,6 +1352,8 @@ export interface WorkSelect<T extends boolean = true> {
         cta?: T | CallToActionBlockSelect<T>;
         content?: T | ContentBlockSelect<T>;
         mediaBlock?: T | MediaBlockSelect<T>;
+        mediaCarousel?: T | MediaCarouselBlockSelect<T>;
+        worksCarousel?: T | WorksCarouselBlockSelect<T>;
         archive?:
           | T
           | {
