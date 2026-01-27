@@ -1,10 +1,16 @@
 'use client'
 
-import React, { useRef, useState, useEffect, useCallback } from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { FreeMode, Mousewheel } from 'swiper/modules'
+import type { Swiper as SwiperType } from 'swiper'
 import { cn } from '@/utilities/ui'
 import { Media } from '@/components/Media'
 import type { Work, Media as MediaType } from '@/payload-types'
+
+import 'swiper/css'
+import 'swiper/css/free-mode'
 
 type Props = {
   title?: string | null
@@ -13,7 +19,7 @@ type Props = {
   className?: string
 }
 
-// Responsive height scales - smaller on mobile
+// Responsive height scales
 const heightScale: Record<string, string> = {
   sm: 'clamp(180px, 25vw, 320px)',
   md: 'clamp(220px, 35vw, 480px)',
@@ -23,53 +29,28 @@ const heightScale: Record<string, string> = {
 // Fixed 16:9 aspect ratio for works
 const ASPECT_RATIO = 16 / 9
 
-// Gutter matches Tailwind container padding via CSS custom property
-// Mobile/sm: 1rem, md+: 2rem
-
 export const WorksCarouselClient: React.FC<Props> = (props) => {
   const { title, height = 'md', works, className } = props
 
-  const scrollContainerRef = useRef<HTMLDivElement>(null)
-  const [scrollProgress, setScrollProgress] = useState(0)
+  const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(true)
+  const [progress, setProgress] = useState(0)
 
-  const updateScrollState = useCallback(() => {
-    const container = scrollContainerRef.current
-    if (!container) return
+  const handleSlideChange = (swiper: SwiperType) => {
+    setCanScrollLeft(!swiper.isBeginning)
+    setCanScrollRight(!swiper.isEnd)
+    setProgress(swiper.progress)
+  }
 
-    const scrollLeft = container.scrollLeft
-    const maxScroll = container.scrollWidth - container.clientWidth
-    const adjustedMax = maxScroll - container.clientWidth * 0.6
-    const progress = adjustedMax > 0 ? scrollLeft / adjustedMax : 0
-
-    setScrollProgress(Math.min(1, Math.max(0, progress)))
-    setCanScrollLeft(scrollLeft > 10)
-    setCanScrollRight(scrollLeft < maxScroll - 10)
-  }, [])
-
-  useEffect(() => {
-    const container = scrollContainerRef.current
-    if (!container) return
-
-    container.addEventListener('scroll', updateScrollState, { passive: true })
-    updateScrollState()
-    return () => container.removeEventListener('scroll', updateScrollState)
-  }, [updateScrollState])
-
-  const scrollToDirection = useCallback((direction: 'left' | 'right') => {
-    const container = scrollContainerRef.current
-    if (!container) return
-
-    // Calculate item width based on container height
-    const containerHeight = container.querySelector('[data-carousel-item]')?.clientHeight || 400
-    const itemWidth = containerHeight * ASPECT_RATIO + 16 // + gap
-
-    container.scrollBy({
-      left: direction === 'right' ? itemWidth : -itemWidth,
-      behavior: 'smooth',
-    })
-  }, [])
+  const scrollToDirection = (direction: 'left' | 'right') => {
+    if (!swiperInstance) return
+    if (direction === 'left') {
+      swiperInstance.slidePrev()
+    } else {
+      swiperInstance.slideNext()
+    }
+  }
 
   if (!works || works.length === 0) return null
 
@@ -105,7 +86,16 @@ export const WorksCarouselClient: React.FC<Props> = (props) => {
             --gutter: 2rem;
           }
         }
+        .works-carousel-container .swiper {
+          padding-left: var(--gutter);
+          padding-right: var(--gutter);
+          overflow: visible;
+        }
+        .works-carousel-container .swiper-wrapper {
+          align-items: stretch;
+        }
       `}</style>
+
       {/* Header with title and arrows */}
       <div
         className="flex items-center justify-between mb-4"
@@ -157,77 +147,92 @@ export const WorksCarouselClient: React.FC<Props> = (props) => {
         )}
       </div>
 
-      {/* Carousel container */}
-      <div
-        ref={scrollContainerRef}
-        className="flex gap-4 overflow-x-auto"
-        style={{
-          scrollbarWidth: 'none',
-          msOverflowStyle: 'none',
-          paddingLeft: 'var(--gutter)',
-          paddingRight: 'calc(100vw - var(--gutter) - 100px)',
-          scrollSnapType: 'x mandatory',
-          scrollPaddingLeft: 'var(--gutter)',
+      {/* Swiper Carousel */}
+      <Swiper
+        modules={[FreeMode, Mousewheel]}
+        onSwiper={setSwiperInstance}
+        onSlideChange={handleSlideChange}
+        onProgress={(swiper, prog) => setProgress(prog)}
+        onReachBeginning={() => setCanScrollLeft(false)}
+        onReachEnd={() => setCanScrollRight(false)}
+        onFromEdge={() => {
+          if (swiperInstance) {
+            setCanScrollLeft(!swiperInstance.isBeginning)
+            setCanScrollRight(!swiperInstance.isEnd)
+          }
         }}
+        spaceBetween={16}
+        slidesPerView="auto"
+        freeMode={{
+          enabled: true,
+          sticky: false,
+          momentumBounce: false,
+        }}
+        mousewheel={{
+          forceToAxis: true,
+        }}
+        grabCursor={true}
+        touchEventsTarget="container"
+        threshold={10}
       >
         {works.map((work) => {
           const coverImage = getCoverImage(work)
 
           return (
-            <div
+            <SwiperSlide
               key={work.id}
-              data-carousel-item
-              className="flex-shrink-0 flex flex-col"
               style={{
                 width: `calc(${containerHeight} * ${ASPECT_RATIO})`,
-                scrollSnapAlign: 'start',
+                height: 'auto',
               }}
             >
-              {/* Clickable image */}
-              <Link
-                href={`/work/${work.slug}`}
-                className="relative w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800 block group"
-                style={{ height: containerHeight }}
-              >
-                {coverImage && (
-                  <Media
-                    resource={coverImage}
-                    fill
-                    imgClassName="object-cover transition-transform duration-300 group-hover:scale-105"
-                    videoClassName="absolute inset-0 w-full h-full object-cover"
-                  />
-                )}
-                {!coverImage && (
-                  <div className="absolute inset-0 flex items-center justify-center text-gray-400">
-                    No image
-                  </div>
-                )}
-              </Link>
-              <div className="mt-3 flex items-start justify-between gap-4">
-                <div className="flex-1 min-w-0">
-                  <Link
-                    href={`/work/${work.slug}`}
-                    className="font-medium hover:underline"
-                  >
-                    {work.title}
-                  </Link>
-                  {work.meta?.description && (
-                    <p className="mt-1 text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
-                      {work.meta.description}
-                    </p>
-                  )}
-                </div>
+              <div className="flex flex-col h-full">
+                {/* Clickable image */}
                 <Link
                   href={`/work/${work.slug}`}
-                  className="flex-shrink-0 mt-0.5 text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors"
+                  className="relative w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800 block group"
+                  style={{ height: containerHeight }}
                 >
-                  View →
+                  {coverImage && (
+                    <Media
+                      resource={coverImage}
+                      fill
+                      imgClassName="object-cover transition-transform duration-300 group-hover:scale-105"
+                      videoClassName="absolute inset-0 w-full h-full object-cover"
+                    />
+                  )}
+                  {!coverImage && (
+                    <div className="absolute inset-0 flex items-center justify-center text-gray-400">
+                      No image
+                    </div>
+                  )}
                 </Link>
+                <div className="mt-3 flex items-start justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    <Link
+                      href={`/work/${work.slug}`}
+                      className="font-medium hover:underline"
+                    >
+                      {work.title}
+                    </Link>
+                    {work.meta?.description && (
+                      <p className="mt-1 text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
+                        {work.meta.description}
+                      </p>
+                    )}
+                  </div>
+                  <Link
+                    href={`/work/${work.slug}`}
+                    className="flex-shrink-0 mt-0.5 text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors"
+                  >
+                    View →
+                  </Link>
+                </div>
               </div>
-            </div>
+            </SwiperSlide>
           )
         })}
-      </div>
+      </Swiper>
 
       {/* Progress bar */}
       {works.length > 1 && (
@@ -238,7 +243,7 @@ export const WorksCarouselClient: React.FC<Props> = (props) => {
           <div className="h-0.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
             <div
               className="h-full bg-gray-900 dark:bg-white rounded-full transition-all duration-150 ease-out"
-              style={{ width: `${scrollProgress * 100}%` }}
+              style={{ width: `${progress * 100}%` }}
             />
           </div>
         </div>
