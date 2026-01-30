@@ -191,6 +191,10 @@ export interface Page {
              * Choose how the link should be rendered.
              */
             appearance?: ('default' | 'outline') | null;
+            /**
+             * Choose which icon to display on the button.
+             */
+            intent?: ('internal' | 'external' | 'download' | 'linkedin' | 'github') | null;
           };
           id?: string | null;
         }[]
@@ -481,6 +485,10 @@ export interface Work {
              * Choose how the link should be rendered.
              */
             appearance?: ('default' | 'outline') | null;
+            /**
+             * Choose which icon to display on the button.
+             */
+            intent?: ('internal' | 'external' | 'download' | 'linkedin' | 'github') | null;
           };
           id?: string | null;
         }[]
@@ -593,6 +601,10 @@ export interface CallToActionBlock {
            * Choose how the link should be rendered.
            */
           appearance?: ('default' | 'outline') | null;
+          /**
+           * Choose which icon to display on the button.
+           */
+          intent?: ('internal' | 'external' | 'download' | 'linkedin' | 'github') | null;
         };
         id?: string | null;
       }[]
@@ -647,6 +659,10 @@ export interface ContentBlock {
            * Choose how the link should be rendered.
            */
           appearance?: ('default' | 'outline') | null;
+          /**
+           * Choose which icon to display on the button.
+           */
+          intent?: ('internal' | 'external' | 'download' | 'linkedin' | 'github') | null;
         };
         id?: string | null;
       }[]
@@ -1179,6 +1195,7 @@ export interface PagesSelect<T extends boolean = true> {
                     url?: T;
                     label?: T;
                     appearance?: T;
+                    intent?: T;
                   };
               id?: T;
             };
@@ -1237,6 +1254,7 @@ export interface CallToActionBlockSelect<T extends boolean = true> {
               url?: T;
               label?: T;
               appearance?: T;
+              intent?: T;
             };
         id?: T;
       };
@@ -1263,6 +1281,7 @@ export interface ContentBlockSelect<T extends boolean = true> {
               url?: T;
               label?: T;
               appearance?: T;
+              intent?: T;
             };
         id?: T;
       };
@@ -1341,6 +1360,7 @@ export interface WorkSelect<T extends boolean = true> {
                     url?: T;
                     label?: T;
                     appearance?: T;
+                    intent?: T;
                   };
               id?: T;
             };

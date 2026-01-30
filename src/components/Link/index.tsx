@@ -10,9 +10,10 @@ import React from 'react'
 
 import type { Page, Post } from '@/payload-types'
 
-type ActionAppearance = 'action' | 'action-ghost' | 'action-nav'
+type ActionAppearance = 'default' | 'action' | 'action-ghost' | 'action-nav'
 
 const actionVariantMap: Record<ActionAppearance, ActionButtonProps['variant']> = {
+  default: 'default',
   action: 'default',
   'action-ghost': 'ghost',
   'action-nav': 'navigation',
@@ -22,7 +23,7 @@ type CMSLinkType = {
   appearance?: 'inline' | ActionAppearance | ButtonProps['variant']
   children?: React.ReactNode
   className?: string
-  intent?: ActionButtonIntent
+  intent?: ActionButtonIntent | null
   label?: string | null
   newTab?: boolean | null
   reference?: {
@@ -73,7 +74,7 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
   /* Action button variants */
   if (appearance && appearance in actionVariantMap) {
     const actionVariant = actionVariantMap[appearance as ActionAppearance]
-    const resolvedIntent = intent ?? (newTab ? 'external' : 'internal')
+    const resolvedIntent: ActionButtonIntent = intent ?? (newTab ? 'external' : 'internal')
 
     return (
       <ActionButton

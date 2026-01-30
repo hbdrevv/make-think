@@ -133,6 +133,23 @@ export const link: LinkType = ({ appearances, disableLabel = false, overrides = 
       defaultValue: 'default',
       options: appearanceOptionsToUse,
     })
+
+    linkResult.fields.push({
+      name: 'intent',
+      type: 'select',
+      admin: {
+        description: 'Choose which icon to display on the button.',
+        condition: (_, siblingData) => siblingData?.appearance === 'default',
+      },
+      defaultValue: 'internal',
+      options: [
+        { label: 'Internal (→)', value: 'internal' },
+        { label: 'External (↗)', value: 'external' },
+        { label: 'Download (↓)', value: 'download' },
+        { label: 'LinkedIn', value: 'linkedin' },
+        { label: 'GitHub', value: 'github' },
+      ],
+    })
   }
 
   return deepMerge(linkResult, overrides)

@@ -16,7 +16,7 @@ const intentIcons = {
 export type ActionButtonIntent = keyof typeof intentIcons
 
 const actionButtonVariants = cva(
-  'inline-flex items-center text-surface-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+  'group inline-flex items-center text-surface-foreground transition-colors hover:text-surface-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
       variant: {
@@ -32,13 +32,13 @@ const actionButtonVariants = cva(
 )
 
 const labelStyles = {
-  default: 'border border-surface-foreground rounded-full px-3 py-2 text-label-button',
-  ghost: 'px-1 py-2 text-label-button',
+  default: 'border border-surface-foreground rounded-full px-3 py-2 text-label-button transition-colors group-hover:border-surface-accent group-hover:bg-primitive-coral',
+  ghost: 'px-1 py-2 text-label-button transition-colors',
   navigation: 'px-1 py-0.5 text-label-heavy',
 } as const
 
 const iconContainerStyles = {
-  default: 'border border-surface-foreground rounded flex items-center justify-center p-1',
+  default: 'border border-surface-foreground rounded flex items-center justify-center p-1 transition-colors group-hover:border-surface-accent group-hover:bg-primitive-coral',
   ghost: 'flex items-center justify-center',
   navigation: '',
 } as const
@@ -68,20 +68,16 @@ const ActionButton: React.FC<ActionButtonProps> = ({
   const IconComponent =
     intent && resolvedVariant !== 'navigation' ? intentIcons[intent] : null
 
-  const activeClasses = active
-    ? 'text-surface-accent [&_[data-action-label]]:border-surface-accent [&_[data-action-icon]]:border-surface-accent [&_[data-action-icon]]:bg-primitive-coral'
-    : ''
-
-  const hoverClasses =
-    'hover:text-surface-accent hover:[&_[data-action-label]]:border-surface-accent hover:[&_[data-action-icon]]:border-surface-accent hover:[&_[data-action-icon]]:bg-primitive-coral'
+  const activeLabelClasses = active ? 'border-surface-accent bg-primitive-coral' : ''
+  const activeIconClasses = active ? 'border-surface-accent bg-primitive-coral' : ''
 
   const compoundChildren = (labelText: React.ReactNode) => (
     <>
-      <span data-action-label className={labelStyles[resolvedVariant]}>
+      <span data-action-label className={cn(labelStyles[resolvedVariant], activeLabelClasses)}>
         {labelText}
       </span>
       {IconComponent && (
-        <span data-action-icon className={iconContainerStyles[resolvedVariant]}>
+        <span data-action-icon className={cn(iconContainerStyles[resolvedVariant], activeIconClasses)}>
           <IconComponent size="18px" />
         </span>
       )}
@@ -90,8 +86,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({
 
   const wrapperClassName = cn(
     actionButtonVariants({ variant, className }),
-    activeClasses,
-    hoverClasses,
+    active && 'text-surface-accent',
   )
 
   if (asChild && React.isValidElement(children)) {
