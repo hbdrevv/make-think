@@ -6,6 +6,8 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import { FreeMode, Mousewheel } from 'swiper/modules'
 import type { Swiper as SwiperType } from 'swiper'
 import { cn } from '@/utilities/ui'
+import { ActionButton } from '@/components/ui/action-button'
+import { ArrowLeft, ArrowRight } from 'griddy-icons'
 import { Media } from '@/components/Media'
 import type { Work, Media as MediaType } from '@/payload-types'
 
@@ -112,36 +114,32 @@ export const WorksCarouselClient: React.FC<Props> = (props) => {
 
         {/* Arrow controls */}
         {works.length > 1 && (
-          <div className="flex gap-2">
+          <div className="flex gap-1">
             <button
               onClick={() => scrollToDirection('left')}
               disabled={!canScrollLeft}
               className={cn(
-                'w-10 h-10 rounded-full border flex items-center justify-center transition-all',
+                'rounded p-1 flex items-center justify-center transition-all',
                 canScrollLeft
-                  ? 'border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer'
-                  : 'border-gray-200 dark:border-gray-700 text-gray-300 dark:text-gray-600 cursor-not-allowed'
+                  ? 'border border-surface-foreground text-surface-foreground hover:bg-primitive-coral hover:border-surface-accent hover:text-surface-accent cursor-pointer'
+                  : 'border border-surface-muted-accent text-surface-muted-accent cursor-not-allowed'
               )}
               aria-label="Previous slide"
             >
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path d="M12 5L7 10L12 15" />
-              </svg>
+              <ArrowLeft size="18px" />
             </button>
             <button
               onClick={() => scrollToDirection('right')}
               disabled={!canScrollRight}
               className={cn(
-                'w-10 h-10 rounded-full border flex items-center justify-center transition-all',
+                'rounded p-1 flex items-center justify-center transition-all',
                 canScrollRight
-                  ? 'border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer'
-                  : 'border-gray-200 dark:border-gray-700 text-gray-300 dark:text-gray-600 cursor-not-allowed'
+                  ? 'border border-surface-foreground text-surface-foreground hover:bg-primitive-coral hover:border-surface-accent hover:text-surface-accent cursor-pointer'
+                  : 'border border-surface-muted-accent text-surface-muted-accent cursor-not-allowed'
               )}
               aria-label="Next slide"
             >
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path d="M8 5L13 10L8 15" />
-              </svg>
+              <ArrowRight size="18px" />
             </button>
           </div>
         )}
@@ -221,12 +219,9 @@ export const WorksCarouselClient: React.FC<Props> = (props) => {
                       </p>
                     )}
                   </div>
-                  <Link
-                    href={`/work/${work.slug}`}
-                    className="flex-shrink-0 mt-0.5 text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors"
-                  >
-                    View →
-                  </Link>
+                  <ActionButton asChild variant="ghost" intent="internal">
+                    <Link href={`/work/${work.slug}`}>View</Link>
+                  </ActionButton>
                 </div>
               </div>
             </SwiperSlide>

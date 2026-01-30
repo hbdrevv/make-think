@@ -1,3 +1,8 @@
+import {
+  ActionButton,
+  type ActionButtonIntent,
+  type ActionButtonProps,
+} from '@/components/ui/action-button'
 import { Button, type ButtonProps } from '@/components/ui/button'
 import { cn } from '@/utilities/ui'
 import Link from 'next/link'
@@ -5,10 +10,19 @@ import React from 'react'
 
 import type { Page, Post } from '@/payload-types'
 
+type ActionAppearance = 'action' | 'action-ghost' | 'action-nav'
+
+const actionVariantMap: Record<ActionAppearance, ActionButtonProps['variant']> = {
+  action: 'default',
+  'action-ghost': 'ghost',
+  'action-nav': 'navigation',
+}
+
 type CMSLinkType = {
-  appearance?: 'inline' | ButtonProps['variant']
+  appearance?: 'inline' | ActionAppearance | ButtonProps['variant']
   children?: React.ReactNode
   className?: string
+  intent?: ActionButtonIntent
   label?: string | null
   newTab?: boolean | null
   reference?: {
@@ -26,6 +40,7 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
     appearance = 'inline',
     children,
     className,
+    intent,
     label,
     newTab,
     reference,
@@ -55,8 +70,28 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
     )
   }
 
+  /* Action button variants */
+  if (appearance && appearance in actionVariantMap) {
+    const actionVariant = actionVariantMap[appearance as ActionAppearance]
+    const resolvedIntent = intent ?? (newTab ? 'external' : 'internal')
+
+    return (
+      <ActionButton
+        asChild
+        className={className}
+        intent={resolvedIntent}
+        variant={actionVariant}
+      >
+        <Link href={href || url || ''} {...newTabProps}>
+          {label && label}
+          {children && children}
+        </Link>
+      </ActionButton>
+    )
+  }
+
   return (
-    <Button asChild className={className} size={size} variant={appearance}>
+    <Button asChild className={className} size={size} variant={appearance as ButtonProps['variant']}>
       <Link className={cn(className)} href={href || url || ''} {...newTabProps}>
         {label && label}
         {children && children}
