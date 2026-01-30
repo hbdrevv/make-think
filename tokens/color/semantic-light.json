@@ -1,116 +1,112 @@
 {
   "color": {
-    "semantic": {
-      "$description": "Semantic colors for light theme - use these in components",
-      "background": {
-        "$value": "{color.primitive.white}",
-        "$type": "color",
-        "$description": "Default page background"
+    "surface": {
+      "base": {
+        "value": "{primitive.sage}",
+        "type": "color",
+        "description": "default surface color"
       },
       "foreground": {
-        "$value": "{color.primitive.gray.900}",
-        "$type": "color",
-        "$description": "Default text color"
+        "value": "{primitive.mahogany}",
+        "type": "color",
+        "description": "default foreground color"
       },
-      "card": {
-        "DEFAULT": {
-          "$value": "{color.primitive.gray.100}",
-          "$type": "color",
-          "$description": "Card background"
+      "accent": {
+        "value": "{primitive.flame.200}",
+        "type": "color"
+      },
+      "alt": {
+        "base": {
+          "value": "{primitive.gradient.soft}",
+          "type": "color"
         },
         "foreground": {
-          "$value": "{color.primitive.gray.900}",
-          "$type": "color"
+          "value": "{color.surface.foreground}",
+          "type": "color"
+        },
+        "accent": {
+          "value": "{color.surface.accent}",
+          "type": "color"
         }
       },
-      "popover": {
-        "DEFAULT": {
-          "$value": "{color.primitive.white}",
-          "$type": "color"
+      "overlay": {
+        "base": {
+          "value": "{primitive.mahogany}",
+          "type": "color",
+          "description": "alt base"
         },
         "foreground": {
-          "$value": "{color.primitive.gray.900}",
-          "$type": "color"
+          "value": "{primitive.coral}",
+          "type": "color"
+        },
+        "accent": {
+          "value": "{color.surface.accent}",
+          "type": "color"
         }
       },
-      "primary": {
-        "DEFAULT": {
-          "$value": "{color.primitive.gray.900}",
-          "$type": "color",
-          "$description": "Primary actions and emphasis"
+      "elevated": {
+        "base": {
+          "value": "{primitive.gray.200}",
+          "type": "color",
+          "description": "overlay background color"
         },
         "foreground": {
-          "$value": "{color.primitive.gray.50}",
-          "$type": "color"
+          "value": "{primitive.cashmere}",
+          "type": "color"
+        },
+        "accent": {
+          "value": "{color.surface.accent}",
+          "type": "color"
         }
       },
-      "secondary": {
-        "DEFAULT": {
-          "$value": "{color.primitive.gray.100}",
-          "$type": "color"
+      "emphasis": {
+        "base": {
+          "value": "{primitive.plum}",
+          "type": "color"
         },
         "foreground": {
-          "$value": "{color.primitive.gray.900}",
-          "$type": "color"
+          "value": "{primitive.coral}",
+          "type": "color"
+        },
+        "accent": {
+          "value": "{color.surface.accent}",
+          "type": "color"
         }
       },
       "muted": {
-        "DEFAULT": {
-          "$value": "{color.primitive.gray.100}",
-          "$type": "color",
-          "$description": "Subdued backgrounds"
+        "base": {
+          "value": "{primitive.cashmere}",
+          "type": "color"
         },
         "foreground": {
-          "$value": "{color.primitive.gray.500}",
-          "$type": "color",
-          "$description": "Subdued text"
+          "value": "{primitive.gray.300}",
+          "type": "color"
+        },
+        "accent": {
+          "value": "{primitive.gray.400}",
+          "type": "color"
         }
       },
-      "accent": {
-        "DEFAULT": {
-          "$value": "{color.primitive.gray.100}",
-          "$type": "color"
+      "contrast": {
+        "base": {
+          "value": "{primitive.charcoal}",
+          "type": "color",
+          "description": "used for persistent elements that need contrast"
         },
         "foreground": {
-          "$value": "{color.primitive.gray.900}",
-          "$type": "color"
-        }
-      },
-      "destructive": {
-        "DEFAULT": {
-          "$value": "{color.primitive.red.500}",
-          "$type": "color"
+          "value": "{primitive.white}",
+          "type": "color",
+          "description": "used for persistent elements that need contrast"
         },
-        "foreground": {
-          "$value": "{color.primitive.gray.50}",
-          "$type": "color"
+        "accent": {
+          "value": "{color.surface.accent}",
+          "type": "color"
         }
-      },
-      "border": {
-        "$value": "{color.primitive.gray.200}",
-        "$type": "color"
-      },
-      "input": {
-        "$value": "{color.primitive.gray.200}",
-        "$type": "color"
-      },
-      "ring": {
-        "$value": "{color.primitive.gray.900}",
-        "$type": "color",
-        "$description": "Focus ring color"
-      },
-      "success": {
-        "$value": "{color.primitive.cyan.200}",
-        "$type": "color"
-      },
-      "warning": {
-        "$value": "{color.primitive.amber.100}",
-        "$type": "color"
-      },
-      "error": {
-        "$value": "{color.primitive.red.100}",
-        "$type": "color"
       }
     }
+  },
+  "drop-shadow": {
+    "value": "{foundation.shadow}",
+    "type": "boxShadow"
   }
 }

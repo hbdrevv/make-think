@@ -1,108 +1,107 @@
 {
   "color": {
-    "semantic": {
-      "$description": "Semantic colors for dark theme - overrides light theme",
-      "background": {
-        "$value": "{color.primitive.black}",
-        "$type": "color"
+    "surface": {
+      "base": {
+        "value": "{primitive.black}",
+        "type": "color",
+        "description": "default surface color"
       },
       "foreground": {
-        "$value": "{color.primitive.gray.50}",
-        "$type": "color"
+        "value": "{primitive.sage}",
+        "type": "color",
+        "description": "default foreground color"
       },
-      "card": {
-        "DEFAULT": {
-          "$value": "{color.primitive.gray.950}",
-          "$type": "color"
+      "accent": {
+        "value": "{primitive.coral}",
+        "type": "color"
+      },
+      "alt": {
+        "base": {
+          "value": "{primitive.gray.950}",
+          "type": "color"
         },
         "foreground": {
-          "$value": "{color.primitive.gray.50}",
-          "$type": "color"
+          "value": "{color.surface.foreground}",
+          "type": "color"
+        },
+        "accent": {
+          "value": "{color.surface.accent}",
+          "type": "color"
         }
       },
-      "popover": {
-        "DEFAULT": {
-          "$value": "{color.primitive.gray.900}",
-          "$type": "color"
+      "elevated": {
+        "base": {
+          "value": "{primitive.charcoal}",
+          "type": "color",
+          "description": "alt base"
         },
         "foreground": {
-          "$value": "{color.primitive.gray.50}",
-          "$type": "color"
+          "value": "{primitive.sage}",
+          "type": "color"
+        },
+        "accent": {
+          "value": "{color.surface.accent}",
+          "type": "color"
         }
       },
-      "primary": {
-        "DEFAULT": {
-          "$value": "{color.primitive.gray.50}",
-          "$type": "color"
+      "overlay": {
+        "base": {
+          "value": "{primitive.gray.700}",
+          "type": "color",
+          "description": "overlay background color"
         },
         "foreground": {
-          "$value": "{color.primitive.gray.900}",
-          "$type": "color"
+          "value": "{primitive.sage}",
+          "type": "color"
+        },
+        "accent": {
+          "value": "{color.surface.accent}",
+          "type": "color"
         }
       },
-      "secondary": {
-        "DEFAULT": {
-          "$value": "{color.primitive.gray.800}",
-          "$type": "color"
+      "emphasis": {
+        "base": {
+          "value": "{primitive.olive}",
+          "type": "color"
         },
         "foreground": {
-          "$value": "{color.primitive.gray.50}",
-          "$type": "color"
+          "value": "{primitive.sage}",
+          "type": "color"
+        },
+        "accent": {
+          "value": "{primitive.gray.500}",
+          "type": "color"
         }
       },
       "muted": {
-        "DEFAULT": {
-          "$value": "{color.primitive.gray.800}",
-          "$type": "color"
+        "base": {
+          "value": "{primitive.black}",
+          "type": "color"
         },
         "foreground": {
-          "$value": "{color.primitive.gray.400}",
-          "$type": "color"
+          "value": "{primitive.gray.700}",
+          "type": "color"
+        },
+        "accent": {
+          "value": "{primitive.gray.400}",
+          "type": "color"
         }
       },
-      "accent": {
-        "DEFAULT": {
-          "$value": "{color.primitive.gray.800}",
-          "$type": "color"
+      "contrast": {
+        "base": {
+          "value": "{primitive.black}",
+          "type": "color",
+          "description": "for high contrast use cases"
         },
         "foreground": {
-          "$value": "{color.primitive.gray.50}",
-          "$type": "color"
-        }
-      },
-      "destructive": {
-        "DEFAULT": {
-          "$value": "{color.primitive.red.900}",
-          "$type": "color"
+          "value": "{primitive.sage}",
+          "type": "color",
+          "description": "for high contrast use cases"
         },
-        "foreground": {
-          "$value": "{color.primitive.gray.50}",
-          "$type": "color"
+        "accent": {
+          "value": "{color.surface.accent}",
+          "type": "color"
         }
-      },
-      "border": {
-        "$value": "{color.primitive.gray.800}",
-        "$type": "color"
-      },
-      "input": {
-        "$value": "{color.primitive.gray.800}",
-        "$type": "color"
-      },
-      "ring": {
-        "$value": "{color.primitive.gray.300}",
-        "$type": "color"
-      },
-      "success": {
-        "$value": "{color.primitive.cyan.800}",
-        "$type": "color"
-      },
-      "warning": {
-        "$value": "{color.primitive.amber.900}",
-        "$type": "color"
-      },
-      "error": {
-        "$value": "{color.primitive.red.900}",
-        "$type": "color"
       }
     }
   }

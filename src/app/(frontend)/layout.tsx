@@ -2,6 +2,7 @@ import { Analytics } from '@vercel/analytics/next'
 import type { Metadata } from 'next'
 
 import { cn } from '@/utilities/ui'
+import { neueYorkCondensed, neueYorkNarrow, neueYorkNormal } from '@/fonts'
 import { GeistMono } from 'geist/font/mono'
 import { GeistSans } from 'geist/font/sans'
 import React from 'react'
@@ -21,7 +22,18 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const { isEnabled } = await draftMode()
 
   return (
-    <html className={cn(GeistSans.variable, GeistMono.variable)} lang="en" suppressHydrationWarning>
+    <html
+      className={cn(
+        GeistSans.variable,
+        GeistMono.variable,
+
+        neueYorkNormal.variable,
+        neueYorkCondensed.variable,
+        neueYorkNarrow.variable,
+      )}
+      lang="en"
+      suppressHydrationWarning
+    >
       <head>
         <InitTheme />
         <link href="/media/drevv_logo_rounded_2x.png" rel="icon" sizes="32x32" />

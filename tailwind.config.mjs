@@ -1,5 +1,6 @@
 import tailwindcssAnimate from 'tailwindcss-animate'
 import typography from '@tailwindcss/typography'
+import { headings, body } from './tokens/resolve.mjs'
 
 /** @type {import('tailwindcss').Config} */
 const config = {
@@ -56,46 +57,126 @@ const config = {
         sm: 'calc(var(--radius) - 4px)',
       },
       colors: {
-        accent: {
-          DEFAULT: 'hsl(var(--accent))',
-          foreground: 'hsl(var(--accent-foreground))',
+        // New surface system
+        surface: {
+          DEFAULT: 'var(--surface-base)',
+          foreground: 'var(--surface-foreground)',
+          accent: 'var(--surface-accent)',
+          alt: {
+            DEFAULT: 'var(--surface-alt-base)',
+            foreground: 'var(--surface-alt-foreground)',
+            accent: 'var(--surface-alt-accent)',
+          },
+          overlay: {
+            DEFAULT: 'var(--surface-overlay-base)',
+            foreground: 'var(--surface-overlay-foreground)',
+            accent: 'var(--surface-overlay-accent)',
+          },
+          elevated: {
+            DEFAULT: 'var(--surface-elevated-base)',
+            foreground: 'var(--surface-elevated-foreground)',
+            accent: 'var(--surface-elevated-accent)',
+          },
+          emphasis: {
+            DEFAULT: 'var(--surface-emphasis-base)',
+            foreground: 'var(--surface-emphasis-foreground)',
+            accent: 'var(--surface-emphasis-accent)',
+          },
+          muted: {
+            DEFAULT: 'var(--surface-muted-base)',
+            foreground: 'var(--surface-muted-foreground)',
+            accent: 'var(--surface-muted-accent)',
+          },
+          contrast: {
+            DEFAULT: 'var(--surface-contrast-base)',
+            foreground: 'var(--surface-contrast-foreground)',
+            accent: 'var(--surface-contrast-accent)',
+          },
         },
-        background: 'hsl(var(--background))',
-        border: 'hsla(var(--border))',
+
+        // Primitive palette
+        primitive: {
+          sage: 'var(--color-sage)',
+          blush: 'var(--color-blush)',
+          coral: 'var(--color-coral)',
+          olive: 'var(--color-olive)',
+          plum: 'var(--color-plum)',
+          mahogany: 'var(--color-mahogany)',
+          cashmere: 'var(--color-cashmere)',
+          charcoal: 'var(--color-charcoal)',
+          black: 'var(--color-black)',
+          white: 'var(--color-white)',
+          flame: {
+            100: 'var(--color-flame-100)',
+            200: 'var(--color-flame-200)',
+            300: 'var(--color-flame-300)',
+            400: 'var(--color-flame-400)',
+          },
+          sky: {
+            50: 'var(--color-sky-50)',
+            100: 'var(--color-sky-100)',
+            200: 'var(--color-sky-200)',
+            300: 'var(--color-sky-300)',
+          },
+          gray: {
+            50: 'var(--color-gray-50)',
+            100: 'var(--color-gray-100)',
+            200: 'var(--color-gray-200)',
+            300: 'var(--color-gray-300)',
+            400: 'var(--color-gray-400)',
+            500: 'var(--color-gray-500)',
+            600: 'var(--color-gray-600)',
+            700: 'var(--color-gray-700)',
+            800: 'var(--color-gray-800)',
+            900: 'var(--color-gray-900)',
+            950: 'var(--color-gray-950)',
+          },
+        },
+
+        // Legacy aliases (backward-compatible)
+        accent: {
+          DEFAULT: 'var(--accent)',
+          foreground: 'var(--accent-foreground)',
+        },
+        background: 'var(--background)',
+        border: 'var(--border)',
         card: {
-          DEFAULT: 'hsl(var(--card))',
-          foreground: 'hsl(var(--card-foreground))',
+          DEFAULT: 'var(--card)',
+          foreground: 'var(--card-foreground)',
         },
         destructive: {
-          DEFAULT: 'hsl(var(--destructive))',
-          foreground: 'hsl(var(--destructive-foreground))',
+          DEFAULT: 'var(--destructive)',
+          foreground: 'var(--destructive-foreground)',
         },
-        foreground: 'hsl(var(--foreground))',
-        input: 'hsl(var(--input))',
+        foreground: 'var(--foreground)',
+        input: 'var(--input)',
         muted: {
-          DEFAULT: 'hsl(var(--muted))',
-          foreground: 'hsl(var(--muted-foreground))',
+          DEFAULT: 'var(--muted)',
+          foreground: 'var(--muted-foreground)',
         },
         popover: {
-          DEFAULT: 'hsl(var(--popover))',
-          foreground: 'hsl(var(--popover-foreground))',
+          DEFAULT: 'var(--popover)',
+          foreground: 'var(--popover-foreground)',
         },
         primary: {
-          DEFAULT: 'hsl(var(--primary))',
-          foreground: 'hsl(var(--primary-foreground))',
+          DEFAULT: 'var(--primary)',
+          foreground: 'var(--primary-foreground)',
         },
-        ring: 'hsl(var(--ring))',
+        ring: 'var(--ring)',
         secondary: {
-          DEFAULT: 'hsl(var(--secondary))',
-          foreground: 'hsl(var(--secondary-foreground))',
+          DEFAULT: 'var(--secondary)',
+          foreground: 'var(--secondary-foreground)',
         },
-        success: 'hsl(var(--success))',
-        error: 'hsl(var(--error))',
-        warning: 'hsl(var(--warning))',
+        success: 'var(--success)',
+        error: 'var(--error)',
+        warning: 'var(--warning)',
       },
       fontFamily: {
-        mono: ['var(--font-geist-mono)'],
         sans: ['var(--font-geist-sans)'],
+        mono: ['var(--font-geist-mono)'],
+        'neue-york': ['var(--font-neue-york-normal)', 'sans'],
+        'neue-york-condensed': ['var(--font-neue-york-condensed)', 'sans'],
+        'neue-york-narrow': ['var(--font-neue-york-narrow)', 'sans'],
       },
       keyframes: {
         'accordion-down': {
@@ -109,41 +190,17 @@ const config = {
       },
       typography: () => ({
         DEFAULT: {
-          css: [
-            {
-              '--tw-prose-body': 'var(--text)',
-              '--tw-prose-headings': 'var(--text)',
-              h1: {
-                fontWeight: 'normal',
-                marginBottom: '0.25em',
-              },
-            },
-          ],
-        },
-        base: {
-          css: [
-            {
-              h1: {
-                fontSize: '2.5rem',
-              },
-              h2: {
-                fontSize: '1.25rem',
-                fontWeight: 600,
-              },
-            },
-          ],
-        },
-        md: {
-          css: [
-            {
-              h1: {
-                fontSize: '3.5rem',
-              },
-              h2: {
-                fontSize: '1.5rem',
-              },
-            },
-          ],
+          css: {
+            '--tw-prose-body': 'var(--foreground)',
+            '--tw-prose-headings': 'var(--foreground)',
+            // Map HTML elements to resolved token styles
+            p: body.base,
+            h1: { ...headings.large, marginBottom: '0.25em' },
+            h2: headings.standard,
+            h3: headings.small,
+            h4: headings.xs,
+            h5: body.large,
+          },
         },
       }),
     },

@@ -1,0 +1,166 @@
+{
+  "text": {
+    "heading": {
+      "xs": {
+        "value": {
+          "fontFamily": "{neue-york-condensed}",
+          "fontWeight": "{condensed-regular}",
+          "fontSize": "{scale.4}",
+          "lineHeight": "{line-height.loose}",
+          "letterSpacing": "{letter-spacing.tight}",
+          "paragraphSpacing": "{scale.4}"
+        },
+        "type": "typography",
+        "description": "copy-sized headilnes"
+      },
+      "small": {
+        "value": {
+          "fontFamily": "{neue-york-narrow}",
+          "fontWeight": "{narrow-medium}",
+          "fontSize": "{scale.8}",
+          "lineHeight": "{line-height.loose}",
+          "letterSpacing": "{letter-spacing.tight}",
+          "paragraphSpacing": "{scale.4}"
+        },
+        "type": "typography",
+        "description": "Medium size for subheads and emphasized blocks of text. "
+      },
+      "med": {
+        "value": {
+          "fontFamily": "{neue-york-narrow}",
+          "fontWeight": "{narrow-medium}",
+          "fontSize": "{scale.10}",
+          "lineHeight": "{line-height.default}",
+          "letterSpacing": "{letter-spacing.tightest}",
+          "textCase": "{none}"
+        },
+        "type": "typography",
+        "description": "typestyle for smaller subheads."
+      },
+      "standard": {
+        "value": {
+          "fontFamily": "{neue-york-narrow}",
+          "fontWeight": "{narrow-medium}",
+          "fontSize": "{scale.13}",
+          "lineHeight": "{line-height.default}",
+          "letterSpacing": "{letter-spacing.tightest}",
+          "textCase": "{none}"
+        },
+        "type": "typography",
+        "description": "Standard for section headers"
+      },
+      "large": {
+        "value": {
+          "fontFamily": "{neue-york-condensed}",
+          "fontWeight": "{condensed-extrabold}",
+          "fontSize": "{scale.16}",
+          "lineHeight": "{line-height.tighter}",
+          "letterSpacing": "{letter-spacing.tighter}",
+          "textCase": "{none}"
+        },
+        "type": "typography",
+        "description": "XL headline for high impact hero headlines"
+      },
+      "xl": {
+        "value": {
+          "fontFamily": "{neue-york-condensed}",
+          "fontWeight": "{condensed-extrabold}",
+          "fontSize": "{scale.17}",
+          "lineHeight": "{line-height.tightest}",
+          "letterSpacing": "{letter-spacing.tighter}",
+          "textCase": "{none}"
+        },
+        "type": "typography",
+        "description": "XL headline for high impact hero headlines"
+      }
+    },
+    "body": {
+      "xs": {
+        "value": {
+          "fontFamily": "{neue-york-condensed}",
+          "fontWeight": "{condensed-regular}",
+          "fontSize": "{scale.3}",
+          "lineHeight": "{line-height.default}",
+          "letterSpacing": "{letter-spacing.default}",
+          "textCase": "{none}"
+        },
+        "type": "typography",
+        "description": "Small text for fine print"
+      },
+      "base": {
+        "value": {
+          "fontFamily": "{neue-york-normal}",
+          "fontWeight": "{normal-regular}",
+          "fontSize": "{scale.4}",
+          "lineHeight": "{line-height.looser}",
+          "letterSpacing": "{letter-spacing.default}",
+          "textCase": "{none}",
+          "paragraphSpacing": "{scale.3_5}"
+        },
+        "type": "typography",
+        "description": "standard body copy size"
+      },
+      "small": {
+        "value": {
+          "fontFamily": "{neue-york-normal}",
+          "fontWeight": "{normal-regular}",
+          "lineHeight": "{line-height.looser}",
+          "letterSpacing": "{letter-spacing.default}",
+          "textCase": "{none}",
+          "paragraphSpacing": "{scale.3_5}",
+          "fontSize": "{scale.3_5}"
+        },
+        "type": "typography",
+        "description": "standard body copy size"
+      },
+      "large": {
+        "value": {
+          "fontFamily": "{neue-york-normal}",
+          "fontWeight": "{normal-medium}",
+          "fontSize": "{scale.6}",
+          "lineHeight": "{line-height.loose}",
+          "letterSpacing": "{letter-spacing.tight}",
+          "textCase": "{none}"
+        },
+        "type": "typography",
+        "description": "type style for project names used in carousels, cards and other UX elements"
+      }
+    },
+    "label": {
+      "heavy": {
+        "value": {
+          "fontFamily": "{neue-york-condensed}",
+          "fontWeight": "{condensed-extrabold}",
+          "fontSize": "{scale.3_5}",
+          "textCase": "{uppercase}"
+        },
+        "type": "typography",
+        "description": "Type style for navigation items"
+      },
+      "button": {
+        "value": {
+          "fontFamily": "{neue-york-normal}",
+          "fontWeight": "{normal-regular}",
+          "fontSize": "{scale.3_5}",
+          "lineHeight": "{line-height.tight}",
+          "letterSpacing": "{letter-spacing.tight}",
+          "textCase": "{none}"
+        },
+        "type": "typography",
+        "description": "The type style for use in button components"
+      },
+      "page-title": {
+        "value": {
+          "fontFamily": "{neue-york-condensed}",
+          "fontWeight": "{condensed-regular}",
+          "fontSize": "{scale.4}",
+          "lineHeight": "{line-height.tighter}",
+          "letterSpacing": "{letter-spacing.default}",
+          "textCase": "{uppercase}"
+        },
+        "type": "typography",
+        "description": "type style for page titles"
+      }
+    }
+  }
+}

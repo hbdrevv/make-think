@@ -1,0 +1,8 @@
+{
+  "tokenSetOrder": [
+    "foundation",
+    "semantic-light",
+    "semantic-dark",
+    "semantic-typography"
+  ]
+}
