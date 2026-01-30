@@ -22,8 +22,6 @@ const aspectRatioValues: Record<string, number> = {
   '9:16': 9 / 16,
 }
 
-// Simple gutter from viewport edge
-const GUTTER = '1rem'
 // Space to show hint of previous image
 const PEEK_OFFSET = '64px'
 
@@ -31,31 +29,31 @@ export const MediaCarouselBlock: React.FC<Props> = (props) => {
   const { title, height = 'md', images, className } = props
 
   const scrollContainerRef = useRef<HTMLDivElement>(null)
-  const [scrollProgress, setScrollProgress] = useState(0)
+  const [progress, setProgress] = useState(0)
 
   const { handleMouseDown, handleMouseMove, handleMouseUp, handleMouseLeave } = useDragScroll(scrollContainerRef)
 
-  const handleScroll = useCallback(() => {
+  const updateProgress = useCallback(() => {
     const container = scrollContainerRef.current
     if (!container) return
 
-    const scrollLeft = container.scrollLeft
-    // Adjust maxScroll so progress completes when last image is fully visible
     const maxScroll = container.scrollWidth - container.clientWidth
-    const adjustedMax = maxScroll - container.clientWidth * 0.6
-    const progress = adjustedMax > 0 ? scrollLeft / adjustedMax : 0
+    if (maxScroll <= 0) {
+      setProgress(0)
+      return
+    }
 
-    setScrollProgress(Math.min(1, Math.max(0, progress)))
+    setProgress(container.scrollLeft / maxScroll)
   }, [])
 
   useEffect(() => {
     const container = scrollContainerRef.current
     if (!container) return
 
-    container.addEventListener('scroll', handleScroll, { passive: true })
-    handleScroll() // Initialize progress
-    return () => container.removeEventListener('scroll', handleScroll)
-  }, [handleScroll])
+    container.addEventListener('scroll', updateProgress, { passive: true })
+    updateProgress()
+    return () => container.removeEventListener('scroll', updateProgress)
+  }, [updateProgress])
 
   if (!images || images.length === 0) return null
 
@@ -63,29 +61,46 @@ export const MediaCarouselBlock: React.FC<Props> = (props) => {
 
   return (
     <div
-      className={cn('relative', className)}
+      className={cn('relative overflow-x-clip media-carousel-container', className)}
       style={{
         width: '100vw',
         marginLeft: 'calc(-50vw + 50%)',
       }}
     >
+      {/* Responsive CSS to match container left edge */}
+      <style>{`
+        .media-carousel-container {
+          --gutter: 1rem;
+        }
+        @media (min-width: 768px) {
+          .media-carousel-container {
+            --gutter: 2rem;
+          }
+        }
+        @media (min-width: 1536px) {
+          .media-carousel-container {
+            --gutter: calc((100vw - 86rem) / 2 + 2rem);
+          }
+        }
+      `}</style>
+
       {title && (
         <h3
           className="text-lg font-medium mb-4"
-          style={{ paddingLeft: `calc(${GUTTER} + ${PEEK_OFFSET})` }}
+          style={{ paddingLeft: `calc(var(--gutter) + ${PEEK_OFFSET})` }}
         >
           {title}
         </h3>
       )}
 
-      {/* Carousel container - full bleed, no snap */}
+      {/* Carousel container with snap */}
       <div
         ref={scrollContainerRef}
-        className="flex gap-4 overflow-x-auto select-none"
+        className="flex gap-4 overflow-x-auto select-none snap-x snap-mandatory"
         style={{
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',
-          paddingRight: `calc(100vw - ${GUTTER} - 100px)`,
+          paddingRight: `calc(100vw - var(--gutter) - 100px)`,
         }}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
@@ -100,10 +115,10 @@ export const MediaCarouselBlock: React.FC<Props> = (props) => {
           return (
             <div
               key={index}
-              className="flex-shrink-0 flex flex-col"
+              className="flex-shrink-0 flex flex-col snap-start"
               style={{
                 width: `calc(${containerHeight} * ${ratio})`,
-                marginLeft: isFirst ? `calc(${GUTTER} + ${PEEK_OFFSET})` : undefined,
+                marginLeft: isFirst ? `calc(var(--gutter) + ${PEEK_OFFSET})` : undefined,
               }}
             >
               <div
@@ -129,16 +144,16 @@ export const MediaCarouselBlock: React.FC<Props> = (props) => {
         })}
       </div>
 
-      {/* Progress bar */}
+      {/* Slide progress */}
       {images.length > 1 && (
         <div
           className="mt-4"
-          style={{ paddingLeft: `calc(${GUTTER} + ${PEEK_OFFSET})`, paddingRight: GUTTER }}
+          style={{ paddingLeft: `calc(var(--gutter) + ${PEEK_OFFSET})`, paddingRight: 'var(--gutter)' }}
         >
-          <div className="h-0.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+          <div className="h-0.5 w-full max-w-80 rounded-full bg-surface-muted-accent overflow-hidden">
             <div
-              className="h-full bg-gray-900 dark:bg-white rounded-full transition-all duration-150 ease-out"
-              style={{ width: `${scrollProgress * 100}%` }}
+              className="h-full bg-surface-accent rounded-full transition-all duration-150 ease-out"
+              style={{ width: `${progress * 100}%` }}
             />
           </div>
         </div>

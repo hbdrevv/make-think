@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { Swiper, SwiperSlide } from 'swiper/react'
-import { FreeMode, Mousewheel } from 'swiper/modules'
+import { Mousewheel } from 'swiper/modules'
 import type { Swiper as SwiperType } from 'swiper'
 import { cn } from '@/utilities/ui'
 import { ActionButton } from '@/components/ui/action-button'
@@ -12,7 +12,6 @@ import { Media } from '@/components/Media'
 import type { Work, Media as MediaType } from '@/payload-types'
 
 import 'swiper/css'
-import 'swiper/css/free-mode'
 
 type Props = {
   title?: string | null
@@ -71,14 +70,13 @@ export const WorksCarouselClient: React.FC<Props> = (props) => {
 
   return (
     <div
-      className={cn('relative works-carousel-container', className)}
+      className={cn('relative overflow-x-clip works-carousel-container', className)}
       style={{
-        ['--gutter' as string]: '1rem',
         width: '100vw',
         marginLeft: 'calc(-50vw + 50%)',
       }}
     >
-      {/* Responsive CSS to match container padding */}
+      {/* Responsive CSS to match container left edge */}
       <style>{`
         .works-carousel-container {
           --gutter: 1rem;
@@ -86,6 +84,11 @@ export const WorksCarouselClient: React.FC<Props> = (props) => {
         @media (min-width: 768px) {
           .works-carousel-container {
             --gutter: 2rem;
+          }
+        }
+        @media (min-width: 1536px) {
+          .works-carousel-container {
+            --gutter: calc((100vw - 86rem) / 2 + 2rem);
           }
         }
         .works-carousel-container .swiper {
@@ -147,10 +150,10 @@ export const WorksCarouselClient: React.FC<Props> = (props) => {
 
       {/* Swiper Carousel */}
       <Swiper
-        modules={[FreeMode, Mousewheel]}
+        modules={[Mousewheel]}
         onSwiper={setSwiperInstance}
         onSlideChange={handleSlideChange}
-        onProgress={(swiper, prog) => setProgress(prog)}
+        onProgress={(swiper) => setProgress(swiper.progress)}
         onReachBeginning={() => setCanScrollLeft(false)}
         onReachEnd={() => setCanScrollRight(false)}
         onFromEdge={() => {
@@ -161,11 +164,6 @@ export const WorksCarouselClient: React.FC<Props> = (props) => {
         }}
         spaceBetween={16}
         slidesPerView="auto"
-        freeMode={{
-          enabled: true,
-          sticky: false,
-          momentumBounce: false,
-        }}
         mousewheel={{
           forceToAxis: true,
         }}
@@ -229,15 +227,15 @@ export const WorksCarouselClient: React.FC<Props> = (props) => {
         })}
       </Swiper>
 
-      {/* Progress bar */}
+      {/* Slide progress */}
       {works.length > 1 && (
         <div
           className="mt-4"
           style={{ paddingLeft: 'var(--gutter)', paddingRight: 'var(--gutter)' }}
         >
-          <div className="h-0.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+          <div className="h-0.5 w-full max-w-80 rounded-full bg-surface-muted-accent overflow-hidden">
             <div
-              className="h-full bg-gray-900 dark:bg-white rounded-full transition-all duration-150 ease-out"
+              className="h-full bg-surface-accent rounded-full transition-all duration-150 ease-out"
               style={{ width: `${progress * 100}%` }}
             />
           </div>

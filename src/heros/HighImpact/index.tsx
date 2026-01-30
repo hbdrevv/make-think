@@ -34,7 +34,7 @@ export const HighImpactHero: React.FC<Page['hero']> = ({ links, media, richText 
       </div>
 
       {/* Content */}
-      <div className="relative z-10 w-full px-8 py-16">
+      <div className="relative z-10 container py-16">
         <div className="flex flex-col items-start gap-8 max-w-[720px]">
           {richText && <RichText data={richText} enableGutter={false} />}
           {!hasMedia && Array.isArray(links) && links.length > 0 && (
