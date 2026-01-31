@@ -35,7 +35,7 @@
   /* ===== SURFACE SYSTEM (LIGHT) ===== */
   --surface-base: var(--color-sage);
   --surface-foreground: var(--color-mahogany);
-  --surface-accent: {primitive.flame-200};
+  --surface-accent: var(--color-flame-200);
   --surface-alt-base: linear-gradient(var(--color-sage) 100%, var(--color-blush) 0%);
   --surface-alt-foreground: var(--surface-foreground);
   --surface-alt-accent: var(--surface-accent);
