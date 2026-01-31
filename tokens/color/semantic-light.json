@@ -61,11 +61,11 @@
       },
       "emphasis": {
         "base": {
-          "value": "{primitive.blush}",
+          "value": "{primitive.sage}",
           "type": "color"
         },
         "foreground": {
-          "value": "{primitive.plum}",
+          "value": "{primitive.white}",
           "type": "color"
         },
         "accent": {

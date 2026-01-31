@@ -45,8 +45,8 @@
   --surface-elevated-base: var(--color-gray-50);
   --surface-elevated-foreground: var(--color-black);
   --surface-elevated-accent: var(--surface-accent);
-  --surface-emphasis-base: var(--color-blush);
-  --surface-emphasis-foreground: var(--color-plum);
+  --surface-emphasis-base: var(--color-sage);
+  --surface-emphasis-foreground: var(--color-white);
   --surface-emphasis-accent: var(--surface-accent);
   --surface-muted-base: var(--color-cashmere);
   --surface-muted-foreground: var(--color-gray-300);
