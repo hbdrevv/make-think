@@ -12,7 +12,7 @@
         "description": "default foreground color"
       },
       "accent": {
-        "value": "{primitive.cashmere-light}",
+        "value": "{primitive.flame-200}",
         "type": "color"
       },
       "alt": {
