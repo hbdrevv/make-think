@@ -51,7 +51,7 @@
           "description": "overlay background color"
         },
         "foreground": {
-          "value": "{primitive.charcoal}",
+          "value": "{primitive.black}",
           "type": "color"
         },
         "accent": {

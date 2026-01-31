@@ -37,7 +37,7 @@ export default async function Page({ params }: Args) {
   }
 
   return (
-    <>
+    <div className="bg-surface text-surface-foreground min-h-screen" data-surface="elevated">
       {doc.hero?.type === 'highImpact' && <HighImpactHero {...doc.hero} />}
       <article className="mx-auto max-w-6xl p-6">
         {doc.hero?.type !== 'highImpact' && (
@@ -45,7 +45,7 @@ export default async function Page({ params }: Args) {
         )}
         {Array.isArray(doc.layout) ? <RenderBlocks blocks={doc.layout} /> : null}
       </article>
-    </>
+    </div>
   )
 }
 

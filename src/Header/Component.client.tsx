@@ -30,7 +30,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
   }, [headerTheme])
 
   return (
-    <header className="container sticky top-0 z-20" {...(theme ? { 'data-theme': theme } : {})}>
+    <header className="container sticky top-0 z-20">
       <div className="py-8 flex items-center gap-0">
         <Link
           href="/"

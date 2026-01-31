@@ -36,7 +36,7 @@ export default async function WorkIndexPage() {
   })
 
   return (
-    <main className="mx-auto max-w-5xl p-6">
+    <main className="mx-auto max-w-5xl p-6 bg-surface text-surface-foreground min-h-screen" data-surface="elevated">
       <h1 className="text-3xl font-semibold mb-6">Work</h1>
       <ul className="space-y-3">
         {docs.map((w: any) => (
