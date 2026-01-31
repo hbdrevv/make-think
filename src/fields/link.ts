@@ -90,13 +90,9 @@ export const link: LinkType = ({ appearances, disableLabel = false, overrides = 
   ]
 
   if (!disableLabel) {
-    linkTypes.map((linkType) => ({
-      ...linkType,
-      admin: {
-        ...linkType.admin,
-        width: '50%',
-      },
-    }))
+    linkTypes.forEach((linkType) => {
+      linkType.admin = { ...linkType.admin, width: '50%' }
+    })
 
     linkResult.fields.push({
       type: 'row',

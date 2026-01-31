@@ -32,13 +32,13 @@ const actionButtonVariants = cva(
 )
 
 const labelStyles = {
-  default: 'border border-surface-foreground rounded-full px-3 py-2 text-label-button transition-colors group-hover:border-surface-accent group-hover:bg-primitive-coral',
+  default: 'border border-surface-foreground rounded-full px-3 py-2 text-label-button transition-colors group-hover:border-surface-accent group-hover:bg-primitive-coral dark:group-hover:bg-primitive-black',
   ghost: 'px-1 py-2 text-label-button transition-colors',
   navigation: 'px-1 py-0.5 text-label-heavy',
 } as const
 
 const iconContainerStyles = {
-  default: 'border border-surface-foreground rounded flex items-center justify-center p-1 transition-colors group-hover:border-surface-accent group-hover:bg-primitive-coral',
+  default: 'border border-surface-foreground rounded flex items-center justify-center p-1 transition-colors group-hover:border-surface-accent group-hover:bg-primitive-coral dark:group-hover:bg-primitive-black',
   ghost: 'flex items-center justify-center',
   navigation: '',
 } as const
@@ -68,8 +68,8 @@ const ActionButton: React.FC<ActionButtonProps> = ({
   const IconComponent =
     intent && resolvedVariant !== 'navigation' ? intentIcons[intent] : null
 
-  const activeLabelClasses = active ? 'border-surface-accent bg-primitive-coral' : ''
-  const activeIconClasses = active ? 'border-surface-accent bg-primitive-coral' : ''
+  const activeLabelClasses = active ? 'border-surface-accent bg-primitive-coral dark:bg-primitive-black' : ''
+  const activeIconClasses = active ? 'border-surface-accent bg-primitive-coral dark:bg-primitive-black' : ''
 
   const compoundChildren = (labelText: React.ReactNode) => (
     <>
