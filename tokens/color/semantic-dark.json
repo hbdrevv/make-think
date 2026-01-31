@@ -17,7 +17,7 @@
       },
       "alt": {
         "base": {
-          "value": "{primitive.gray.950}",
+          "value": "{primitive.black}",
           "type": "color"
         },
         "foreground": {
@@ -31,7 +31,7 @@
       },
       "elevated": {
         "base": {
-          "value": "{primitive.charcoal}",
+          "value": "{primitive.black}",
           "type": "color",
           "description": "alt base"
         },
@@ -46,7 +46,7 @@
       },
       "overlay": {
         "base": {
-          "value": "{primitive.gray.700}",
+          "value": "{primitive.charcoal}",
           "type": "color",
           "description": "overlay background color"
         },
@@ -61,7 +61,7 @@
       },
       "emphasis": {
         "base": {
-          "value": "{primitive.olive}",
+          "value": "{primitive.charcoal}",
           "type": "color"
         },
         "foreground": {
@@ -75,7 +75,7 @@
       },
       "muted": {
         "base": {
-          "value": "{primitive.black}",
+          "value": "{primitive.charcoal}",
           "type": "color"
         },
         "foreground": {

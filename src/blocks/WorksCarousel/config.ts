@@ -1,5 +1,7 @@
 import type { Block } from 'payload'
 
+import { surfaceField } from '@/fields/surface'
+
 export const WorksCarousel: Block = {
   slug: 'worksCarousel',
   interfaceName: 'WorksCarouselBlock',
@@ -8,6 +10,7 @@ export const WorksCarousel: Block = {
     plural: 'Works Carousels',
   },
   fields: [
+    surfaceField,
     {
       name: 'title',
       type: 'text',

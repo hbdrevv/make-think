@@ -208,6 +208,10 @@ export interface Page {
     | MediaCarouselBlock
     | WorksCarouselBlock
     | {
+        /**
+         * Set the background and foreground color scheme for this block.
+         */
+        surface?: ('default' | 'alt' | 'overlay' | 'elevated' | 'emphasis' | 'muted' | 'contrast') | null;
         collection: 'posts' | 'work';
         populateBy: 'collection' | 'selection';
         selectedDocs?:
@@ -502,6 +506,10 @@ export interface Work {
     | MediaCarouselBlock
     | WorksCarouselBlock
     | {
+        /**
+         * Set the background and foreground color scheme for this block.
+         */
+        surface?: ('default' | 'alt' | 'overlay' | 'elevated' | 'emphasis' | 'muted' | 'contrast') | null;
         collection: 'posts' | 'work';
         populateBy: 'collection' | 'selection';
         selectedDocs?:
@@ -562,6 +570,10 @@ export interface Work {
  * via the `definition` "CallToActionBlock".
  */
 export interface CallToActionBlock {
+  /**
+   * Set the background and foreground color scheme for this block.
+   */
+  surface?: ('default' | 'alt' | 'overlay' | 'elevated' | 'emphasis' | 'muted' | 'contrast') | null;
   richText?: {
     root: {
       type: string;
@@ -618,6 +630,10 @@ export interface CallToActionBlock {
  * via the `definition` "ContentBlock".
  */
 export interface ContentBlock {
+  /**
+   * Set the background and foreground color scheme for this block.
+   */
+  surface?: ('default' | 'alt' | 'overlay' | 'elevated' | 'emphasis' | 'muted' | 'contrast') | null;
   columns?:
     | {
         size?: ('oneThird' | 'half' | 'twoThirds' | 'full') | null;
@@ -676,6 +692,10 @@ export interface ContentBlock {
  * via the `definition` "MediaBlock".
  */
 export interface MediaBlock {
+  /**
+   * Set the background and foreground color scheme for this block.
+   */
+  surface?: ('default' | 'alt' | 'overlay' | 'elevated' | 'emphasis' | 'muted' | 'contrast') | null;
   media: string | Media;
   id?: string | null;
   blockName?: string | null;
@@ -686,6 +706,10 @@ export interface MediaBlock {
  * via the `definition` "MediaCarouselBlock".
  */
 export interface MediaCarouselBlock {
+  /**
+   * Set the background and foreground color scheme for this block.
+   */
+  surface?: ('default' | 'alt' | 'overlay' | 'elevated' | 'emphasis' | 'muted' | 'contrast') | null;
   title?: string | null;
   height: 'sm' | 'md' | 'lg';
   images: {
@@ -703,6 +727,10 @@ export interface MediaCarouselBlock {
  * via the `definition` "WorksCarouselBlock".
  */
 export interface WorksCarouselBlock {
+  /**
+   * Set the background and foreground color scheme for this block.
+   */
+  surface?: ('default' | 'alt' | 'overlay' | 'elevated' | 'emphasis' | 'muted' | 'contrast') | null;
   title?: string | null;
   height: 'sm' | 'md' | 'lg';
   /**
@@ -718,6 +746,10 @@ export interface WorksCarouselBlock {
  * via the `definition` "FormBlock".
  */
 export interface FormBlock {
+  /**
+   * Set the background and foreground color scheme for this block.
+   */
+  surface?: ('default' | 'alt' | 'overlay' | 'elevated' | 'emphasis' | 'muted' | 'contrast') | null;
   form: string | Form;
   enableIntro?: boolean | null;
   introContent?: {
@@ -1212,6 +1244,7 @@ export interface PagesSelect<T extends boolean = true> {
         archive?:
           | T
           | {
+              surface?: T;
               collection?: T;
               populateBy?: T;
               selectedDocs?: T;
@@ -1241,6 +1274,7 @@ export interface PagesSelect<T extends boolean = true> {
  * via the `definition` "CallToActionBlock_select".
  */
 export interface CallToActionBlockSelect<T extends boolean = true> {
+  surface?: T;
   richText?: T;
   links?:
     | T
@@ -1266,6 +1300,7 @@ export interface CallToActionBlockSelect<T extends boolean = true> {
  * via the `definition` "ContentBlock_select".
  */
 export interface ContentBlockSelect<T extends boolean = true> {
+  surface?: T;
   columns?:
     | T
     | {
@@ -1293,6 +1328,7 @@ export interface ContentBlockSelect<T extends boolean = true> {
  * via the `definition` "MediaBlock_select".
  */
 export interface MediaBlockSelect<T extends boolean = true> {
+  surface?: T;
   media?: T;
   id?: T;
   blockName?: T;
@@ -1302,6 +1338,7 @@ export interface MediaBlockSelect<T extends boolean = true> {
  * via the `definition` "MediaCarouselBlock_select".
  */
 export interface MediaCarouselBlockSelect<T extends boolean = true> {
+  surface?: T;
   title?: T;
   height?: T;
   images?:
@@ -1320,6 +1357,7 @@ export interface MediaCarouselBlockSelect<T extends boolean = true> {
  * via the `definition` "WorksCarouselBlock_select".
  */
 export interface WorksCarouselBlockSelect<T extends boolean = true> {
+  surface?: T;
   title?: T;
   height?: T;
   works?: T;
@@ -1331,6 +1369,7 @@ export interface WorksCarouselBlockSelect<T extends boolean = true> {
  * via the `definition` "FormBlock_select".
  */
 export interface FormBlockSelect<T extends boolean = true> {
+  surface?: T;
   form?: T;
   enableIntro?: T;
   introContent?: T;
@@ -1377,6 +1416,7 @@ export interface WorkSelect<T extends boolean = true> {
         archive?:
           | T
           | {
+              surface?: T;
               collection?: T;
               populateBy?: T;
               selectedDocs?: T;

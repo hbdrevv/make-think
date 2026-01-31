@@ -1,3 +1,4 @@
+import { cn } from '@/utilities/ui'
 import React, { Fragment } from 'react'
 
 import type { Page } from '@/payload-types'
@@ -29,16 +30,22 @@ export const RenderBlocks: React.FC<{
 
   if (hasBlocks) {
     return (
-      <Fragment>
+      <div className="[&>*:last-child]:mb-0">
         {blocks.map((block, index) => {
           const { blockType } = block
+          const surface = 'surface' in block ? (block.surface as string) : undefined
+          const hasSurface = surface && surface !== 'default'
 
           if (blockType && blockType in blockComponents) {
             const Block = blockComponents[blockType]
 
             if (Block) {
               return (
-                <div className="my-16" key={index}>
+                <div
+                  className={cn(hasSurface ? 'py-16 bg-surface text-surface-foreground' : 'my-16')}
+                  key={index}
+                  {...(hasSurface ? { 'data-surface': surface } : {})}
+                >
                   {/* @ts-expect-error there may be some mismatch between the expected types here */}
                   <Block {...block} disableInnerContainer />
                 </div>
@@ -47,7 +54,7 @@ export const RenderBlocks: React.FC<{
           }
           return null
         })}
-      </Fragment>
+      </div>
     )
   }
 

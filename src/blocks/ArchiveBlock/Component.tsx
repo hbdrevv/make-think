@@ -99,7 +99,7 @@ export default async function ArchiveBlock(props: ArchiveBlockProps & { id?: str
   }
 
   return (
-    <div className="my-16" id={id ? `block-${id}` : undefined}>
+    <div id={id ? `block-${id}` : undefined}>
       {introContent ? (
         <div className="container mb-16">
           <RichText

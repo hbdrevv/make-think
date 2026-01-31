@@ -1,9 +1,12 @@
 import type { Block } from 'payload'
 
+import { surfaceField } from '@/fields/surface'
+
 export const MediaCarousel: Block = {
   slug: 'mediaCarousel',
   interfaceName: 'MediaCarouselBlock',
   fields: [
+    surfaceField,
     {
       name: 'title',
       type: 'text',

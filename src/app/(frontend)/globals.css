@@ -119,23 +119,23 @@
     --surface-foreground: var(--color-sage);
     --surface-accent: var(--color-coral);
 
-    --surface-alt-base: var(--color-gray-950);
+    --surface-alt-base: var(--color-black);
     --surface-alt-foreground: var(--color-sage);
     --surface-alt-accent: var(--color-coral);
 
-    --surface-overlay-base: var(--color-gray-700);
+    --surface-overlay-base: var(--color-charcoal);
     --surface-overlay-foreground: var(--color-sage);
     --surface-overlay-accent: var(--color-coral);
 
-    --surface-elevated-base: var(--color-charcoal);
+    --surface-elevated-base: var(--color-black);
     --surface-elevated-foreground: var(--color-sage);
     --surface-elevated-accent: var(--color-coral);
 
-    --surface-emphasis-base: var(--color-olive);
+    --surface-emphasis-base: var(--color-charcoal);
     --surface-emphasis-foreground: var(--color-sage);
     --surface-emphasis-accent: var(--color-gray-500);
 
-    --surface-muted-base: var(--color-black);
+    --surface-muted-base: var(--color-charcoal);
     --surface-muted-foreground: var(--color-gray-700);
     --surface-muted-accent: var(--color-gray-400);
 
@@ -151,6 +151,55 @@
     --success: var(--color-sky-300);
     --warning: var(--color-flame-200);
     --error: var(--color-flame-400);
+  }
+
+  /* ===== SURFACE LEVEL OVERRIDES ===== */
+  [data-surface='alt'] {
+    --surface-base: var(--surface-alt-base);
+    --surface-foreground: var(--surface-alt-foreground);
+    --surface-accent: var(--surface-alt-accent);
+    --background: var(--surface-alt-base);
+    --foreground: var(--surface-alt-foreground);
+  }
+
+  [data-surface='overlay'] {
+    --surface-base: var(--surface-overlay-base);
+    --surface-foreground: var(--surface-overlay-foreground);
+    --surface-accent: var(--surface-overlay-accent);
+    --background: var(--surface-overlay-base);
+    --foreground: var(--surface-overlay-foreground);
+  }
+
+  [data-surface='elevated'] {
+    --surface-base: var(--surface-elevated-base);
+    --surface-foreground: var(--surface-elevated-foreground);
+    --surface-accent: var(--surface-elevated-accent);
+    --background: var(--surface-elevated-base);
+    --foreground: var(--surface-elevated-foreground);
+  }
+
+  [data-surface='emphasis'] {
+    --surface-base: var(--surface-emphasis-base);
+    --surface-foreground: var(--surface-emphasis-foreground);
+    --surface-accent: var(--surface-emphasis-accent);
+    --background: var(--surface-emphasis-base);
+    --foreground: var(--surface-emphasis-foreground);
+  }
+
+  [data-surface='muted'] {
+    --surface-base: var(--surface-muted-base);
+    --surface-foreground: var(--surface-muted-foreground);
+    --surface-accent: var(--surface-muted-accent);
+    --background: var(--surface-muted-base);
+    --foreground: var(--surface-muted-foreground);
+  }
+
+  [data-surface='contrast'] {
+    --surface-base: var(--surface-contrast-base);
+    --surface-foreground: var(--surface-contrast-foreground);
+    --surface-accent: var(--surface-contrast-accent);
+    --background: var(--surface-contrast-base);
+    --foreground: var(--surface-contrast-foreground);
   }
 }
 

@@ -8,6 +8,7 @@ import {
 } from '@payloadcms/richtext-lexical'
 
 import { link } from '@/fields/link'
+import { surfaceField } from '@/fields/surface'
 
 const columnFields: Field[] = [
   {
@@ -67,6 +68,7 @@ export const Content: Block = {
   slug: 'content',
   interfaceName: 'ContentBlock',
   fields: [
+    surfaceField,
     {
       name: 'columns',
       type: 'array',

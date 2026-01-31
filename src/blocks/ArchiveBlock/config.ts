@@ -1,9 +1,12 @@
 import type { Block } from 'payload'
 
+import { surfaceField } from '@/fields/surface'
+
 export const Archive: Block = {
   slug: 'archive',
   labels: { singular: 'Archive', plural: 'Archives' },
   fields: [
+    surfaceField,
     // NEW: which collection to populate from
     {
       name: 'collection',
