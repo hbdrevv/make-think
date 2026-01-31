@@ -182,18 +182,18 @@ export const WorksCarouselClient: React.FC<Props> = (props) => {
                 height: 'auto',
               }}
             >
-              <div className="flex flex-col h-full">
+              <div className="group/card flex flex-col h-full">
                 {/* Clickable image */}
                 <Link
                   href={`/work/${work.slug}`}
-                  className="relative w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800 block group"
+                  className="relative w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800 block"
                   style={{ height: containerHeight }}
                 >
                   {coverImage && (
                     <Media
                       resource={coverImage}
                       fill
-                      imgClassName="object-cover transition-transform duration-300 group-hover:scale-105"
+                      imgClassName="object-cover transition-transform duration-300 group-hover/card:scale-105"
                       videoClassName="absolute inset-0 w-full h-full object-cover"
                     />
                   )}
@@ -203,22 +203,17 @@ export const WorksCarouselClient: React.FC<Props> = (props) => {
                     </div>
                   )}
                 </Link>
-                <div className="mt-3 flex items-start justify-between gap-4">
+                <div className="mt-3 flex items-start justify-between gap-4 px-3">
                   <div className="flex-1 min-w-0">
                     <Link
                       href={`/work/${work.slug}`}
-                      className="font-medium hover:underline"
+                      className="font-medium transition-colors group-hover/card:text-surface-accent"
                     >
                       {work.title}
                     </Link>
-                    {work.meta?.description && (
-                      <p className="mt-1 text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
-                        {work.meta.description}
-                      </p>
-                    )}
                   </div>
-                  <ActionButton asChild variant="ghost" intent="internal">
-                    <Link href={`/work/${work.slug}`}>View</Link>
+                  <ActionButton asChild variant="ghost" intent="internal" className="group-hover/card:text-surface-accent">
+                    <Link href={`/work/${work.slug}`}>View Project</Link>
                   </ActionButton>
                 </div>
               </div>
