@@ -35,6 +35,7 @@ export const RenderBlocks: React.FC<{
           const { blockType } = block
           const surface = 'surface' in block ? (block.surface as string) : undefined
           const hasSurface = surface && surface !== 'default'
+          const isLast = index === blocks.length - 1
 
           if (blockType && blockType in blockComponents) {
             const Block = blockComponents[blockType]
@@ -42,7 +43,10 @@ export const RenderBlocks: React.FC<{
             if (Block) {
               return (
                 <div
-                  className={cn(hasSurface ? 'py-16 bg-surface text-surface-foreground' : 'my-16')}
+                  className={cn(
+                    hasSurface ? 'py-16 bg-surface text-surface-foreground' : 'my-16',
+                    isLast && 'pb-24',
+                  )}
                   key={index}
                   {...(hasSurface ? { 'data-surface': surface } : {})}
                 >
