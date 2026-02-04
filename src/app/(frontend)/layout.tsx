@@ -1,4 +1,5 @@
 import { Analytics } from '@vercel/analytics/next'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import type { Metadata } from 'next'
 
 import { cn } from '@/utilities/ui'
@@ -50,6 +51,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <Footer />
         </Providers>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )
