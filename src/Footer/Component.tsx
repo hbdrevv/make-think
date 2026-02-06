@@ -16,7 +16,7 @@ export async function Footer() {
     <footer className="mt-auto bg-primitive-charcoal text-primitive-sage">
       <div className="container flex items-center justify-between py-4">
         <p className="text-body-xs">
-          Portfolio of Drew VanderVeen. Digital Product Designer. Design Systems Leader.
+          Portfolio of Drew VanderVeen. Digital Product Designer & Systems Thinker.
         </p>
 
         <div className="flex items-center gap-5">
