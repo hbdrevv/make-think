@@ -35,19 +35,21 @@ export const HighImpactHero: React.FC<Page['hero']> = ({ links, media, richText 
 
       {/* Content */}
       <div className="relative z-10 container py-16">
-        <div className="flex flex-col items-start gap-8 max-w-[720px]">
-          {richText && <RichText data={richText} enableGutter={false} />}
-          {!hasMedia && Array.isArray(links) && links.length > 0 && (
-            <ul className="flex gap-4">
-              {links.map(({ link }, i) => {
-                return (
-                  <li key={i}>
-                    <CMSLink {...link} appearance="action" />
-                  </li>
-                )
-              })}
-            </ul>
-          )}
+        <div className="grid grid-cols-4 lg:grid-cols-12 gap-x-16">
+          <div className="col-span-4 lg:col-span-8 flex flex-col items-start gap-8">
+            {richText && <RichText data={richText} enableGutter={false} />}
+            {!hasMedia && Array.isArray(links) && links.length > 0 && (
+              <ul className="flex gap-4">
+                {links.map(({ link }, i) => {
+                  return (
+                    <li key={i}>
+                      <CMSLink {...link} appearance="action" />
+                    </li>
+                  )
+                })}
+              </ul>
+            )}
+          </div>
         </div>
       </div>
     </div>
