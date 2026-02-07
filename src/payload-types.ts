@@ -199,6 +199,9 @@ export interface Page {
           id?: string | null;
         }[]
       | null;
+    /**
+     * Optional background media. If not set, the gradient background will be used.
+     */
     media?: (string | null) | Media;
     featuredContentType?: ('work' | 'externalMedia') | null;
     /**
@@ -512,6 +515,9 @@ export interface Work {
           id?: string | null;
         }[]
       | null;
+    /**
+     * Optional background media. If not set, the gradient background will be used.
+     */
     media?: (string | null) | Media;
     featuredContentType?: ('work' | 'externalMedia') | null;
     /**

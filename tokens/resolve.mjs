@@ -84,6 +84,32 @@ function pxToRem(px) {
   return `${px / 16}rem`
 }
 
+/**
+ * Fluid Typography Configuration
+ * For larger sizes, we use clamp() to scale between mobile and desktop.
+ * Format: { minPx, vwFactor, basePx }
+ * Result: clamp(minPx, vwFactor*vw + basePx, maxPx)
+ */
+const FLUID_TYPOGRAPHY = {
+  '13': { minPx: 36, vwFactor: 6, basePx: 32 },   // 56px max → hits max at ~400px viewport
+  '16': { minPx: 56, vwFactor: 12, basePx: 64 },  // 140px max → hits max at ~633px viewport
+  '17': { minPx: 64, vwFactor: 16, basePx: 80 },  // 192px max → hits max at ~700px viewport
+  '18': { minPx: 72, vwFactor: 20, basePx: 96 },  // 256px max → hits max at ~800px viewport
+}
+
+function fluidFontSize(px, scaleKey) {
+  const fluid = FLUID_TYPOGRAPHY[scaleKey]
+  if (!fluid) {
+    return pxToRem(px)
+  }
+
+  const minRem = pxToRem(fluid.minPx)
+  const maxRem = pxToRem(px)
+  const preferred = `${fluid.vwFactor}vw + ${pxToRem(fluid.basePx)}`
+
+  return `clamp(${minRem}, ${preferred}, ${maxRem})`
+}
+
 function resolveStyle(tokenValue) {
   const style = {}
 
@@ -96,7 +122,7 @@ function resolveStyle(tokenValue) {
   if (tokenValue.fontSize) {
     const scaleKey = tokenValue.fontSize.replace(/\{scale\.(.+?)\}/, '$1')
     const px = SCALE_PX[scaleKey]
-    if (px !== undefined) style.fontSize = pxToRem(px)
+    if (px !== undefined) style.fontSize = fluidFontSize(px, scaleKey)
   }
   if (tokenValue.lineHeight) {
     style.lineHeight = LINE_HEIGHT_MAP[tokenValue.lineHeight] ?? tokenValue.lineHeight

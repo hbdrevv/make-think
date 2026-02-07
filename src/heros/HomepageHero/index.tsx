@@ -4,6 +4,8 @@ import { useHeaderTheme } from '@/providers/HeaderTheme'
 import React, { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { Play } from 'lucide-react'
+import gsap from 'gsap'
+import SplitType from 'split-type'
 
 import type { Page, Work, Media as MediaType } from '@/payload-types'
 
@@ -13,6 +15,7 @@ import RichText from '@/components/RichText'
 import { VimeoLightbox } from '@/components/VimeoLightbox'
 
 type HomepageHeroProps = Page['hero'] & {
+  media?: MediaType | string | number | null
   featuredContentType?: 'work' | 'externalMedia' | null
   featuredWork?: Work | string | null
   externalMedia?: {
@@ -23,6 +26,7 @@ type HomepageHeroProps = Page['hero'] & {
 
 export const HomepageHero: React.FC<HomepageHeroProps> = ({
   links,
+  media,
   richText,
   featuredContentType,
   featuredWork,
@@ -30,10 +34,105 @@ export const HomepageHero: React.FC<HomepageHeroProps> = ({
 }) => {
   const { setHeaderTheme } = useHeaderTheme()
   const [lightboxOpen, setLightboxOpen] = useState(false)
+  const heroRef = useRef<HTMLDivElement>(null)
+  const headlineRef = useRef<HTMLDivElement>(null)
+  const linksRef = useRef<HTMLUListElement>(null)
+  const thumbnailRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     setHeaderTheme('light')
   }, [setHeaderTheme])
+
+  // GSAP entrance animations with split text
+  useEffect(() => {
+    let splitInstance: SplitType | null = null
+    let ctx: gsap.Context | null = null
+
+    // Small delay to ensure DOM is ready after hydration
+    const timer = requestAnimationFrame(() => {
+      ctx = gsap.context(() => {
+        const tl = gsap.timeline({ defaults: { ease: 'power3.out' } })
+
+        // Split the headline text into characters
+        if (headlineRef.current) {
+          const textElements = headlineRef.current.querySelectorAll('h1, h2, h3, h4, p')
+          if (textElements.length > 0) {
+            try {
+              splitInstance = new SplitType(textElements as NodeListOf<HTMLElement>, {
+                types: 'lines',
+                tagName: 'span',
+              })
+
+              if (splitInstance.lines && splitInstance.lines.length > 0) {
+                // Set initial state for lines
+                gsap.set(splitInstance.lines, {
+                  opacity: 0,
+                  y: 30,
+                })
+
+                // Animate lines with stagger
+                tl.to(splitInstance.lines, {
+                  opacity: 1,
+                  y: 0,
+                  duration: 0.6,
+                  stagger: 0.12, // 120ms between each line
+                  ease: 'power2.out',
+                })
+              }
+            } catch (e) {
+              // Fallback: just fade in the whole headline
+              gsap.set(headlineRef.current, { opacity: 0, y: 20 })
+              tl.to(headlineRef.current, { opacity: 1, y: 0, duration: 0.6 })
+            }
+          }
+        }
+
+        // Set initial states for other elements
+        if (linksRef.current) {
+          gsap.set(linksRef.current, { opacity: 0, y: 40 })
+        }
+        if (thumbnailRef.current) {
+          gsap.set(thumbnailRef.current, { opacity: 0, y: 40 })
+        }
+
+        // Animate links after headline
+        if (linksRef.current) {
+          tl.to(
+            linksRef.current,
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.6,
+            },
+            '-=0.3',
+          )
+        }
+
+        // Animate thumbnail with stagger
+        if (thumbnailRef.current) {
+          tl.to(
+            thumbnailRef.current,
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.8,
+            },
+            '-=0.4',
+          )
+        }
+      }, heroRef)
+    })
+
+    return () => {
+      cancelAnimationFrame(timer)
+      if (ctx) {
+        ctx.revert()
+      }
+      if (splitInstance) {
+        splitInstance.revert()
+      }
+    }
+  }, [])
 
   const isWorkType = featuredContentType === 'work'
   const workData = typeof featuredWork === 'object' ? featuredWork : null
@@ -52,16 +151,29 @@ export const HomepageHero: React.FC<HomepageHeroProps> = ({
       typeof thumbnail === 'number')
 
   return (
-    <div className="relative -mt-[10.4rem] flex items-end min-h-[809px]">
-      <div className="absolute inset-0 bg-surface-alt-gradient dark:bg-primitive-black" />
+    <div ref={heroRef} className="relative -mt-[10.4rem] flex items-end min-h-[809px]">
+      {media && typeof media === 'object' ? (
+        <Media
+          resource={media}
+          fill
+          priority
+          pictureClassName="absolute inset-0"
+          imgClassName="object-cover"
+          videoClassName="absolute inset-0 w-full h-full object-cover"
+        />
+      ) : (
+        <div className="absolute inset-0 bg-surface-alt-gradient dark:bg-primitive-black" />
+      )}
 
       <div className="relative z-10 container py-16">
         <div className="grid grid-cols-4 lg:grid-cols-12 gap-x-16 gap-y-8 items-end">
           {/* Left content - 8 columns */}
           <div className="col-span-4 lg:col-span-8 flex flex-col items-start gap-8">
-            {richText && <RichText data={richText} enableGutter={false} />}
+            <div ref={headlineRef}>
+              {richText && <RichText data={richText} enableGutter={false} />}
+            </div>
             {Array.isArray(links) && links.length > 0 && (
-              <ul className="flex gap-4">
+              <ul ref={linksRef} className="flex gap-4">
                 {links.map(({ link }, i) => (
                   <li key={i}>
                     <CMSLink {...link} appearance="action" />
@@ -73,7 +185,7 @@ export const HomepageHero: React.FC<HomepageHeroProps> = ({
 
           {/* Right thumbnail - 4 columns */}
           {hasThumbnail && (
-            <div className="col-span-2 lg:col-span-4">
+            <div ref={thumbnailRef} className="col-span-2 lg:col-span-4">
               <FeaturedThumbnail
                 thumbnail={thumbnail}
                 isWorkType={isWorkType}

@@ -66,7 +66,9 @@ export const hero: Field = {
       name: 'media',
       type: 'upload',
       admin: {
-        condition: (_, { type } = {}) => ['highImpact', 'mediumImpact'].includes(type),
+        condition: (_, { type } = {}) =>
+          ['highImpact', 'mediumImpact', 'homepageHero'].includes(type),
+        description: 'Optional background media. If not set, the gradient background will be used.',
       },
       relationTo: 'media',
       // required: true,

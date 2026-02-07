@@ -34,9 +34,9 @@ export const Media: CollectionConfig = {
   ],
   upload: {
     // In production, files are stored in S3/R2 via the storage plugin.
-    // disableLocalStorage prevents Payload from writing to the local disk,
-    // which is not writable in the production Docker container.
-    disableLocalStorage: true,
+    // When S3_BUCKET is set, disable local storage (production).
+    // When not set, allow local storage for easier local development.
+    disableLocalStorage: !!process.env.S3_BUCKET,
     adminThumbnail: 'thumbnail',
     focalPoint: true,
     imageSizes: [
