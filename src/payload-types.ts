@@ -151,7 +151,7 @@ export interface Page {
   id: string;
   title: string;
   hero: {
-    type: 'none' | 'highImpact' | 'mediumImpact' | 'lowImpact';
+    type: 'none' | 'highImpact' | 'mediumImpact' | 'lowImpact' | 'homepageHero';
     richText?: {
       root: {
         type: string;
@@ -200,6 +200,21 @@ export interface Page {
         }[]
       | null;
     media?: (string | null) | Media;
+    featuredContentType?: ('work' | 'externalMedia') | null;
+    /**
+     * Select a work to feature. Clicking will navigate to the work page.
+     */
+    featuredWork?: (string | null) | Work;
+    externalMedia?: {
+      /**
+       * Image displayed in the hero. Clicking opens the Vimeo video.
+       */
+      thumbnail: string | Media;
+      /**
+       * Full Vimeo URL (e.g., https://vimeo.com/123456789)
+       */
+      vimeoUrl: string;
+    };
   };
   layout: (
     | CallToActionBlock
@@ -449,7 +464,7 @@ export interface Work {
   id: string;
   title: string;
   hero: {
-    type: 'none' | 'highImpact' | 'mediumImpact' | 'lowImpact';
+    type: 'none' | 'highImpact' | 'mediumImpact' | 'lowImpact' | 'homepageHero';
     richText?: {
       root: {
         type: string;
@@ -498,6 +513,21 @@ export interface Work {
         }[]
       | null;
     media?: (string | null) | Media;
+    featuredContentType?: ('work' | 'externalMedia') | null;
+    /**
+     * Select a work to feature. Clicking will navigate to the work page.
+     */
+    featuredWork?: (string | null) | Work;
+    externalMedia?: {
+      /**
+       * Image displayed in the hero. Clicking opens the Vimeo video.
+       */
+      thumbnail: string | Media;
+      /**
+       * Full Vimeo URL (e.g., https://vimeo.com/123456789)
+       */
+      vimeoUrl: string;
+    };
   };
   layout: (
     | CallToActionBlock
@@ -1232,6 +1262,14 @@ export interface PagesSelect<T extends boolean = true> {
               id?: T;
             };
         media?: T;
+        featuredContentType?: T;
+        featuredWork?: T;
+        externalMedia?:
+          | T
+          | {
+              thumbnail?: T;
+              vimeoUrl?: T;
+            };
       };
   layout?:
     | T
@@ -1404,6 +1442,14 @@ export interface WorkSelect<T extends boolean = true> {
               id?: T;
             };
         media?: T;
+        featuredContentType?: T;
+        featuredWork?: T;
+        externalMedia?:
+          | T
+          | {
+              thumbnail?: T;
+              vimeoUrl?: T;
+            };
       };
   layout?:
     | T

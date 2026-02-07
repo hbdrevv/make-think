@@ -3,11 +3,13 @@ import React from 'react'
 import type { Page } from '@/payload-types'
 
 import { HighImpactHero } from '@/heros/HighImpact'
+import { HomepageHero } from '@/heros/HomepageHero'
 import { LowImpactHero } from '@/heros/LowImpact'
 import { MediumImpactHero } from '@/heros/MediumImpact'
 
-const heroes = {
+const heroes: Record<string, React.FC<any>> = {
   highImpact: HighImpactHero,
+  homepageHero: HomepageHero,
   lowImpact: LowImpactHero,
   mediumImpact: MediumImpactHero,
 }

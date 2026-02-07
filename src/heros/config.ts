@@ -35,6 +35,10 @@ export const hero: Field = {
           label: 'Low Impact',
           value: 'lowImpact',
         },
+        {
+          label: 'Homepage Hero',
+          value: 'homepageHero',
+        },
       ],
       required: true,
     },
@@ -66,6 +70,61 @@ export const hero: Field = {
       },
       relationTo: 'media',
       // required: true,
+    },
+    {
+      name: 'featuredContentType',
+      type: 'radio',
+      label: 'Featured Content Type',
+      options: [
+        { label: 'Work', value: 'work' },
+        { label: 'External Media', value: 'externalMedia' },
+      ],
+      defaultValue: 'work',
+      admin: {
+        condition: (_, { type } = {}) => type === 'homepageHero',
+        layout: 'horizontal',
+      },
+    },
+    {
+      name: 'featuredWork',
+      type: 'relationship',
+      relationTo: 'work',
+      label: 'Featured Work',
+      admin: {
+        condition: (_, { type, featuredContentType } = {}) =>
+          type === 'homepageHero' && featuredContentType === 'work',
+        description: 'Select a work to feature. Clicking will navigate to the work page.',
+      },
+    },
+    {
+      name: 'externalMedia',
+      type: 'group',
+      label: 'External Media',
+      admin: {
+        condition: (_, { type, featuredContentType } = {}) =>
+          type === 'homepageHero' && featuredContentType === 'externalMedia',
+      },
+      fields: [
+        {
+          name: 'thumbnail',
+          type: 'upload',
+          relationTo: 'media',
+          required: true,
+          label: 'Thumbnail Image',
+          admin: {
+            description: 'Image displayed in the hero. Clicking opens the Vimeo video.',
+          },
+        },
+        {
+          name: 'vimeoUrl',
+          type: 'text',
+          required: true,
+          label: 'Vimeo URL',
+          admin: {
+            description: 'Full Vimeo URL (e.g., https://vimeo.com/123456789)',
+          },
+        },
+      ],
     },
   ],
   label: false,
