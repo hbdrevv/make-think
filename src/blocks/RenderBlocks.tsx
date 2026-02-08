@@ -9,6 +9,7 @@ import { ContentBlock } from '@/blocks/Content/Component'
 import { FormBlock } from '@/blocks/Form/Component'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
 import { MediaCarouselBlock } from '@/blocks/MediaCarousel/Component'
+import { RestrictedContentBlock } from '@/blocks/RestrictedContent/Component'
 import { WorksCarouselBlock } from '@/blocks/WorksCarousel/Component'
 
 const blockComponents = {
@@ -18,6 +19,7 @@ const blockComponents = {
   formBlock: FormBlock,
   mediaBlock: MediaBlock,
   mediaCarousel: MediaCarouselBlock,
+  restrictedContent: RestrictedContentBlock,
   worksCarousel: WorksCarouselBlock,
 }
 

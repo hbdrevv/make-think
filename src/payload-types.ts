@@ -224,6 +224,7 @@ export interface Page {
     | ContentBlock
     | MediaBlock
     | MediaCarouselBlock
+    | RestrictedContentBlock
     | WorksCarouselBlock
     | {
         /**
@@ -540,6 +541,7 @@ export interface Work {
     | ContentBlock
     | MediaBlock
     | MediaCarouselBlock
+    | RestrictedContentBlock
     | WorksCarouselBlock
     | {
         /**
@@ -757,6 +759,51 @@ export interface MediaCarouselBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'mediaCarousel';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "RestrictedContentBlock".
+ */
+export interface RestrictedContentBlock {
+  /**
+   * The main headline displayed over the blurred background
+   */
+  headline: string;
+  /**
+   * Text displayed blurred in the background. This creates the visual effect.
+   */
+  blurredText?: string | null;
+  enableLink?: boolean | null;
+  link?: {
+    type?: ('reference' | 'custom') | null;
+    newTab?: boolean | null;
+    reference?:
+      | ({
+          relationTo: 'pages';
+          value: string | Page;
+        } | null)
+      | ({
+          relationTo: 'posts';
+          value: string | Post;
+        } | null)
+      | ({
+          relationTo: 'work';
+          value: string | Work;
+        } | null);
+    url?: string | null;
+    label: string;
+    /**
+     * Choose how the link should be rendered.
+     */
+    appearance?: ('default' | 'outline') | null;
+    /**
+     * Choose which icon to display on the button.
+     */
+    intent?: ('internal' | 'external' | 'download' | 'linkedin' | 'github') | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'restrictedContent';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1284,6 +1331,7 @@ export interface PagesSelect<T extends boolean = true> {
         content?: T | ContentBlockSelect<T>;
         mediaBlock?: T | MediaBlockSelect<T>;
         mediaCarousel?: T | MediaCarouselBlockSelect<T>;
+        restrictedContent?: T | RestrictedContentBlockSelect<T>;
         worksCarousel?: T | WorksCarouselBlockSelect<T>;
         archive?:
           | T
@@ -1398,6 +1446,28 @@ export interface MediaCarouselBlockSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "RestrictedContentBlock_select".
+ */
+export interface RestrictedContentBlockSelect<T extends boolean = true> {
+  headline?: T;
+  blurredText?: T;
+  enableLink?: T;
+  link?:
+    | T
+    | {
+        type?: T;
+        newTab?: T;
+        reference?: T;
+        url?: T;
+        label?: T;
+        appearance?: T;
+        intent?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "WorksCarouselBlock_select".
  */
 export interface WorksCarouselBlockSelect<T extends boolean = true> {
@@ -1464,6 +1534,7 @@ export interface WorkSelect<T extends boolean = true> {
         content?: T | ContentBlockSelect<T>;
         mediaBlock?: T | MediaBlockSelect<T>;
         mediaCarousel?: T | MediaCarouselBlockSelect<T>;
+        restrictedContent?: T | RestrictedContentBlockSelect<T>;
         worksCarousel?: T | WorksCarouselBlockSelect<T>;
         archive?:
           | T
