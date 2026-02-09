@@ -153,7 +153,7 @@ export const HomepageHero: React.FC<HomepageHeroProps> = ({
   return (
     <div ref={heroRef} className="relative -mt-[10.4rem] flex items-end min-h-[809px]">
       {media && typeof media === 'object' ? (
-        <div className="absolute inset-0 dark:opacity-60">
+        <>
           <Media
             resource={media}
             fill
@@ -162,7 +162,12 @@ export const HomepageHero: React.FC<HomepageHeroProps> = ({
             imgClassName="object-cover"
             videoClassName="absolute inset-0 w-full h-full object-cover"
           />
-        </div>
+          {/* Dark mode color burn overlay */}
+          <div
+            className="absolute inset-0 hidden dark:block"
+            style={{ backgroundColor: '#494949', mixBlendMode: 'color-burn' }}
+          />
+        </>
       ) : (
         <div className="absolute inset-0 bg-surface-alt-gradient dark:bg-primitive-black" />
       )}
