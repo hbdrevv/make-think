@@ -153,14 +153,16 @@ export const HomepageHero: React.FC<HomepageHeroProps> = ({
   return (
     <div ref={heroRef} className="relative -mt-[10.4rem] flex items-end min-h-[809px]">
       {media && typeof media === 'object' ? (
-        <Media
-          resource={media}
-          fill
-          priority
-          pictureClassName="absolute inset-0"
-          imgClassName="object-cover"
-          videoClassName="absolute inset-0 w-full h-full object-cover"
-        />
+        <div className="absolute inset-0 dark:opacity-60">
+          <Media
+            resource={media}
+            fill
+            priority
+            pictureClassName="absolute inset-0"
+            imgClassName="object-cover"
+            videoClassName="absolute inset-0 w-full h-full object-cover"
+          />
+        </div>
       ) : (
         <div className="absolute inset-0 bg-surface-alt-gradient dark:bg-primitive-black" />
       )}
