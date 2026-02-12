@@ -183,6 +183,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({
 
     return (
       <Slot
+        role="button"
         className={wrapperClassName}
         ref={combinedRef}
         onMouseEnter={handleMouseEnter}
@@ -197,6 +198,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({
 
   return (
     <button
+      role="button"
       className={wrapperClassName}
       disabled={disabled}
       ref={combinedRef}

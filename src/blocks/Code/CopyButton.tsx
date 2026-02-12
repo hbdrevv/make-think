@@ -20,6 +20,7 @@ export function CopyButton({ code }: { code: string }) {
       <Button
         className="flex gap-1"
         variant={'secondary'}
+        aria-label={text === 'Copy' ? 'Copy code to clipboard' : 'Code copied to clipboard'}
         onClick={async () => {
           await navigator.clipboard.writeText(code)
           updateCopyStatus()
