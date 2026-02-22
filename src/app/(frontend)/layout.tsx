@@ -1,6 +1,7 @@
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import type { Metadata } from 'next'
+import Script from 'next/script'
 
 import { cn } from '@/utilities/ui'
 import { neueYorkCondensed, neueYorkNarrow, neueYorkNormal } from '@/fonts'
@@ -34,6 +35,18 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       suppressHydrationWarning
     >
       <head>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-BMJGGCN64C"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-BMJGGCN64C');
+          `}
+        </Script>
         <InitTheme />
         <link href="/media/drevv_logo_rounded_2x.png" rel="icon" sizes="32x32" />
         <link href="/media/drevv_logo_rounded_2x.png" rel="icon" type="image/png" />
