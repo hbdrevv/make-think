@@ -1,10 +1,15 @@
 'use client'
 
-import React, { useRef, useState, useEffect, useCallback } from 'react'
+import React, { useState } from 'react'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Mousewheel } from 'swiper/modules'
+import type { Swiper as SwiperType } from 'swiper'
 import { cn } from '@/utilities/ui'
 import { Media } from '@/components/Media'
-import { useDragScroll } from '@/blocks/shared/useDragScroll'
+import { ArrowLeft, ArrowRight } from 'griddy-icons'
 import type { MediaCarouselBlock as MediaCarouselBlockProps } from '@/payload-types'
+
+import 'swiper/css'
 
 type Props = MediaCarouselBlockProps & {
   className?: string
@@ -22,38 +27,28 @@ const aspectRatioValues: Record<string, number> = {
   '9:16': 9 / 16,
 }
 
-// Space to show hint of previous image
-const PEEK_OFFSET = '64px'
-
 export const MediaCarouselBlock: React.FC<Props> = (props) => {
   const { title, height = 'md', images, className } = props
 
-  const scrollContainerRef = useRef<HTMLDivElement>(null)
+  const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null)
+  const [canScrollLeft, setCanScrollLeft] = useState(false)
+  const [canScrollRight, setCanScrollRight] = useState(true)
   const [progress, setProgress] = useState(0)
 
-  const { handleMouseDown, handleMouseMove, handleMouseUp, handleMouseLeave } = useDragScroll(scrollContainerRef)
+  const handleSlideChange = (swiper: SwiperType) => {
+    setCanScrollLeft(!swiper.isBeginning)
+    setCanScrollRight(!swiper.isEnd)
+    setProgress(swiper.progress)
+  }
 
-  const updateProgress = useCallback(() => {
-    const container = scrollContainerRef.current
-    if (!container) return
-
-    const maxScroll = container.scrollWidth - container.clientWidth
-    if (maxScroll <= 0) {
-      setProgress(0)
-      return
+  const scrollToDirection = (direction: 'left' | 'right') => {
+    if (!swiperInstance) return
+    if (direction === 'left') {
+      swiperInstance.slidePrev()
+    } else {
+      swiperInstance.slideNext()
     }
-
-    setProgress(container.scrollLeft / maxScroll)
-  }, [])
-
-  useEffect(() => {
-    const container = scrollContainerRef.current
-    if (!container) return
-
-    container.addEventListener('scroll', updateProgress, { passive: true })
-    updateProgress()
-    return () => container.removeEventListener('scroll', updateProgress)
-  }, [updateProgress])
+  }
 
   if (!images || images.length === 0) return null
 
@@ -82,73 +77,126 @@ export const MediaCarouselBlock: React.FC<Props> = (props) => {
             --gutter: calc((100vw - 86rem) / 2 + 2rem);
           }
         }
+        .media-carousel-container .swiper {
+          padding-left: var(--gutter);
+          padding-right: var(--gutter);
+          overflow: visible;
+        }
+        .media-carousel-container .swiper-wrapper {
+          align-items: stretch;
+        }
       `}</style>
 
-      {title && (
-        <h3
-          className="text-lg font-medium mb-4"
-          style={{ paddingLeft: `calc(var(--gutter) + ${PEEK_OFFSET})` }}
-        >
-          {title}
-        </h3>
-      )}
-
-      {/* Carousel container with snap */}
+      {/* Header with title and arrows */}
       <div
-        ref={scrollContainerRef}
-        className="flex gap-4 overflow-x-auto select-none snap-x snap-mandatory"
+        className="flex items-center justify-between mb-4"
         style={{
-          scrollbarWidth: 'none',
-          msOverflowStyle: 'none',
-          paddingRight: `calc(100vw - var(--gutter) - 100px)`,
+          paddingLeft: 'var(--gutter)',
+          paddingRight: 'var(--gutter)',
         }}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseLeave}
+      >
+        {title ? (
+          <h3 className="text-lg font-medium">{title}</h3>
+        ) : (
+          <div />
+        )}
+
+        {/* Arrow controls */}
+        {images.length > 1 && (
+          <div className="flex gap-1">
+            <button
+              onClick={() => scrollToDirection('left')}
+              disabled={!canScrollLeft}
+              className={cn(
+                'rounded p-1 flex items-center justify-center transition-all',
+                canScrollLeft
+                  ? 'border border-surface-foreground text-surface-foreground hover:bg-primitive-coral hover:border-surface-accent hover:text-surface-accent cursor-pointer'
+                  : 'border border-surface-muted-accent text-surface-muted-accent cursor-not-allowed',
+              )}
+              aria-label="Previous slide"
+            >
+              <ArrowLeft size="18px" />
+            </button>
+            <button
+              onClick={() => scrollToDirection('right')}
+              disabled={!canScrollRight}
+              className={cn(
+                'rounded p-1 flex items-center justify-center transition-all',
+                canScrollRight
+                  ? 'border border-surface-foreground text-surface-foreground hover:bg-primitive-coral hover:border-surface-accent hover:text-surface-accent cursor-pointer'
+                  : 'border border-surface-muted-accent text-surface-muted-accent cursor-not-allowed',
+              )}
+              aria-label="Next slide"
+            >
+              <ArrowRight size="18px" />
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Swiper Carousel */}
+      <Swiper
+        modules={[Mousewheel]}
+        onSwiper={setSwiperInstance}
+        onSlideChange={handleSlideChange}
+        onProgress={(swiper) => setProgress(swiper.progress)}
+        onReachBeginning={() => setCanScrollLeft(false)}
+        onReachEnd={() => setCanScrollRight(false)}
+        onFromEdge={() => {
+          if (swiperInstance) {
+            setCanScrollLeft(!swiperInstance.isBeginning)
+            setCanScrollRight(!swiperInstance.isEnd)
+          }
+        }}
+        spaceBetween={16}
+        slidesPerView="auto"
+        mousewheel={{
+          forceToAxis: true,
+        }}
+        grabCursor={true}
+        touchEventsTarget="container"
+        threshold={10}
       >
         {images.map((item, index) => {
           const { image, aspectRatio = '16:9', caption } = item
           const ratio = aspectRatioValues[aspectRatio] || aspectRatioValues['16:9']
-          const isFirst = index === 0
 
           return (
-            <div
+            <SwiperSlide
               key={index}
-              className="flex-shrink-0 flex flex-col snap-start"
               style={{
                 width: `calc(${containerHeight} * ${ratio})`,
-                marginLeft: isFirst ? `calc(var(--gutter) + ${PEEK_OFFSET})` : undefined,
+                height: 'auto',
               }}
             >
-              <div
-                className="relative w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800"
-                style={{ height: containerHeight }}
-              >
-                {image && typeof image === 'object' && (
-                  <Media
-                    resource={image}
-                    fill
-                    imgClassName="object-cover"
-                    videoClassName="absolute inset-0 w-full h-full object-cover"
-                  />
+              <div className="flex flex-col h-full">
+                <div
+                  className="relative w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800"
+                  style={{ height: containerHeight }}
+                >
+                  {image && typeof image === 'object' && (
+                    <Media
+                      resource={image}
+                      fill
+                      imgClassName="object-cover"
+                      videoClassName="absolute inset-0 w-full h-full object-cover"
+                    />
+                  )}
+                </div>
+                {caption && (
+                  <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">{caption}</p>
                 )}
               </div>
-              {caption && (
-                <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                  {caption}
-                </p>
-              )}
-            </div>
+            </SwiperSlide>
           )
         })}
-      </div>
+      </Swiper>
 
       {/* Slide progress */}
       {images.length > 1 && (
         <div
           className="mt-4"
-          style={{ paddingLeft: `calc(var(--gutter) + ${PEEK_OFFSET})`, paddingRight: 'var(--gutter)' }}
+          style={{ paddingLeft: 'var(--gutter)', paddingRight: 'var(--gutter)' }}
         >
           <div className="h-0.5 w-full max-w-80 rounded-full bg-surface-muted-accent overflow-hidden">
             <div
