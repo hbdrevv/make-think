@@ -2,7 +2,7 @@ import { cn } from '@/utilities/ui'
 import React from 'react'
 import RichText from '@/components/RichText'
 
-import type { ContentBlock as ContentBlockProps, Media as MediaType } from '@/payload-types'
+import type { ContentBlock as ContentBlockProps, Media as MediaType, SiteSetting } from '@/payload-types'
 
 import { CMSLink } from '../../components/Link'
 import { Media } from '../../components/Media'
@@ -52,10 +52,10 @@ const colsSpanClasses: Record<string, string> = {
 export const ContentBlock: React.FC<ContentBlockProps> = async (props) => {
   const { columns } = props
 
-  const siteSettings = await getCachedGlobal('site-settings', 0)()
+  const siteSettings = await getCachedGlobal('site-settings', 0)() as SiteSetting
   const verticalAlign = siteSettings?.columnVerticalAlign || 'top'
   const alignClass = alignmentClasses[verticalAlign]
-  const objectPosition = objectPositionClasses[verticalAlign]
+  const _objectPosition = objectPositionClasses[verticalAlign]
 
   return (
     <div className="container">
