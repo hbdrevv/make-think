@@ -105,10 +105,12 @@ export interface Config {
   globals: {
     header: Header;
     footer: Footer;
+    'site-settings': SiteSetting;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
+    'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
   };
   locale: null;
   user: User & {
@@ -675,6 +677,7 @@ export interface ContentBlock {
   columns?:
     | {
         size?: ('oneThird' | 'half' | 'twoThirds' | 'full') | null;
+        contentType?: ('text' | 'media' | 'empty') | null;
         richText?: {
           root: {
             type: string;
@@ -690,6 +693,22 @@ export interface ContentBlock {
           };
           [k: string]: unknown;
         } | null;
+        media?: {
+          image: string | Media;
+          /**
+           * Show full image without cropping
+           */
+          contain?: boolean | null;
+          height?: ('sm' | 'md' | 'lg') | null;
+          /**
+           * Optional caption displayed below image
+           */
+          caption?: string | null;
+          /**
+           * Check if image is decorative (will use empty alt text)
+           */
+          decorative?: boolean | null;
+        };
         enableLink?: boolean | null;
         link?: {
           type?: ('reference' | 'custom') | null;
@@ -1397,7 +1416,17 @@ export interface ContentBlockSelect<T extends boolean = true> {
     | T
     | {
         size?: T;
+        contentType?: T;
         richText?: T;
+        media?:
+          | T
+          | {
+              image?: T;
+              contain?: T;
+              height?: T;
+              caption?: T;
+              decorative?: T;
+            };
         enableLink?: T;
         link?:
           | T
@@ -2048,6 +2077,19 @@ export interface Footer {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings".
+ */
+export interface SiteSetting {
+  id: string;
+  /**
+   * How columns align vertically when heights differ
+   */
+  columnVerticalAlign?: ('top' | 'center' | 'bottom') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header_select".
  */
 export interface HeaderSelect<T extends boolean = true> {
@@ -2088,6 +2130,16 @@ export interface FooterSelect<T extends boolean = true> {
             };
         id?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings_select".
+ */
+export interface SiteSettingsSelect<T extends boolean = true> {
+  columnVerticalAlign?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

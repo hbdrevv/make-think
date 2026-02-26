@@ -16,6 +16,7 @@ import { Users } from './collections/Users'
 import Work from './collections/Work'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
+import { SiteSettings } from './SiteSettings/config'
 import { plugins } from './plugins'
 import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
@@ -50,7 +51,7 @@ export default buildConfig({
 
   // Collections / Globals
   collections: [Pages, Work, Posts, Media, Categories, Users],
-  globals: [Header, Footer],
+  globals: [Header, Footer, SiteSettings],
 
   cors: [getServerSideURL()].filter(Boolean),
 

@@ -15,3 +15,6 @@ public/sitemap*.xml
 
 # Claude Code
 .claude/
+
+# Local notes
+FUTURE_FEATURES.md
